@@ -18,7 +18,8 @@
                  [pez/clerk "1.0.0"]
                  [venantius/accountant "0.2.5"
                   :exclusions [org.clojure/tools.reader]]
-                 [arttuka/reagent-material-ui "5.11.12-0"]]
+                 [arttuka/reagent-material-ui "5.11.12-0"]
+                 [re-frame "1.4.0"]]
 
   :jvm-opts ["-Xmx1G"]
   

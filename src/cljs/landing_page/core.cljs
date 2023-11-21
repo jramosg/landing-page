@@ -1,15 +1,17 @@
 (ns landing-page.core
   (:require
-   [reagent.core :as reagent :refer [atom]]
-   [reagent.dom :as rdom]
-   [reagent.session :as session]
-   [reitit.frontend :as reitit]
-   [clerk.core :as clerk]
-   [accountant.core :as accountant]
-   [landing-page.home.view :as home.view]
-   [reagent-mui.material.css-baseline :refer [css-baseline]]
-   [reagent-mui.styles :as styles]
-   [landing-page.theme-provider :as theme-provider]))
+    [re-frame.core :as rf]
+    [reagent.core :as r]
+    [reagent.core :as reagent :refer [atom]]
+    [reagent.dom :as rdom]
+    [reagent.session :as session]
+    [reitit.frontend :as reitit]
+    [clerk.core :as clerk]
+    [accountant.core :as accountant]
+    [landing-page.home.view :as home.view]
+    [reagent-mui.material.css-baseline :refer [css-baseline]]
+    [reagent-mui.styles :as styles]
+    [landing-page.theming.theme-provider :as theme-provider]))
 
 ;; -------------------------
 ;; Routes
@@ -94,13 +96,17 @@
 ;; -------------------------
 ;; Initialize app
 
-(defn mount-root []
-  (rdom/render
+(defn main []
+  (fn []
     [:<>
      [css-baseline]
      [styles/theme-provider (theme-provider/main)
       [css-baseline]
-      [current-page]]]
+      [current-page]]]))
+
+(defn mount-root []
+  (rdom/render
+    [main]
     (.getElementById js/document "app")))
 
 (defn init! []
