@@ -9,44 +9,56 @@
             [reagent-mui.material.button :refer [button]]
             [reagent-mui.material.box :refer [box]]
             [reagent-mui.material.stack :refer [stack]]
-            [landing-page.home.app-bar :as app-bar]))
+            [landing-page.home.app-bar :as app-bar]
+            [reagent-mui.icons.business :refer [business]]
+            [landing-page.util :as util]
+            [reagent-mui.material.collapse :refer [collapse]]
+            [reitit.frontend.easy :as rfe]
+            [landing-page.components.text-field :refer [my-text-field]]))
 
 (def ^:const ^:private company-description
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Iaculis eu non diam phasellus vestibulum lorem sed risus ultricies.")
 
-(defn- text-btn [{:keys [label]}]
-  [button {:color "secondary"}
+(defn- text-btn [{:keys [label] :as props}]
+  [button (merge {:color "secondary"}
+                 (dissoc props :label))
    label])
 
 (defn- pwd-visibility-icon []
   [input-adornment {:position "end"}
    [visibility]])
 
+(defn- login-text-field [props]
+  [my-text-field (merge {:sx {:py 1}
+                         :variant "filled"}
+                        props)])
+
 (defn- login-inputs []
   [paper {:sx {:p 2
                :display "flex"
                :flex-direction "column"}
           :elevation 2}
-   [text-field {:sx {:py 1}
-                :variant "filled"
-                :label "Email or phone"}]
-   [text-field {:sx {:py 1}
-                :variant "filled"
-                :InputProps {:end-adornment (r/as-element [pwd-visibility-icon])}
-                :label "Password"}]
-   ])
+   [login-text-field {:label "Email or phone"}]
+   [login-text-field {:label "Password"}]])
 
 (defn- continue-btn []
   [button
    {:variant "contained"
-    :full-width true}
+    :full-width true
+    :on-click #()}
    "Log in"])
 
 (defn- create-account-box []
   [box {:display "flex"
         :align-items "center"}
    "Don't have an account?"
-   [text-btn {:label "Create an account"}]])
+   [text-btn {:label "Create an account"
+              :on-click (fn []
+                          (rfe/navigate :create-account)) #_#(do (prn "repl")                 ;  (rfe/push-state :create-account)
+                               (set! (.-location js/window) "create-account")
+                               )
+              ;:href "/create-account"
+              }]])
 
 (defn- left-container []
   [stack {:direction "column"
@@ -56,11 +68,6 @@
           :height 1
           :justify-content "center"
           :px 8}
-   [box {:component "img"
-         :alt "company logo"
-         :sx {:height "4rem"
-              :width "4rem"}
-         :src "assets/company_logo.png"}]
    [typography {:variant "h4"} "Login into your account"]
    [login-inputs]
    [box {:display "flex" :justify-content "flex-end" :mt -2}
@@ -85,31 +92,30 @@
       [:<>
        [typography {:variant "h3"
                     :color "primary"}
-        "COMPANY NAME"]
+        util/company-name]
        [typography
         [typography {:component "span"
                      :sx {:color "common.black"}}
          (:description @description-state)]
         [typography {:component "span"
                      :color "secondary"
-                     :sx {:font-size "5rem" :line-height 0}}
+                     :sx {:font-size "6rem" :line-height 0}}
          "."]]])))
 
 (defn main []
-  [stack {:height 1}
-   [:> app-bar/main]
-   [unstable-grid-2 {:container true
-                     :columns 2
-                     :height 1}
-    [unstable-grid-2 {:sm 2 :md 1 :height 1}
-     [left-container]]
-    [unstable-grid-2 {:sm 2
-                      :md 1
-                      :bgcolor "primary.light"
-                      :justify-content "center"
-                      :display "flex"
-                      :flex-direction "column"
-                      :p 4
-                      :height 1
-                      :wrap "wrap"}
-     [right-container]]]])
+
+  [unstable-grid-2 {:container true
+                    :columns 2
+                    :height 1}
+   [unstable-grid-2 {:sm 2 :md 1 :height 1}
+    [left-container]]
+   [unstable-grid-2 {:sm 2
+                     :md 1
+                     :bgcolor "primary.light"
+                     :justify-content "center"
+                     :display "flex"
+                     :flex-direction "column"
+                     :p 4
+                     :height 1
+                     :wrap "wrap"}
+    [right-container]]])

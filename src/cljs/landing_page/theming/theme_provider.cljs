@@ -3,10 +3,10 @@
             [reagent-mui.styles :as styles]
             [landing-page.theming.subs :as subs]))
 
-(defn-  theme [mode]
+(defn- theme [mode]
   {:palette {:tonal-offset {:light 0.7}
-             :primary {:main "#0B664D"}
-             :secondary {:main "#FD9CCA"}
+             :primary {:main "#3D5B59"}
+             :secondary {:main "#FCB5AC"}
              :mode @mode}
    :components {:MuiButton {:style-overrides {:root {:text-transform "none"}}}}})
 
