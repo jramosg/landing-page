@@ -1,17 +1,23 @@
 (ns landing-page.components.text-field
-  (:require [landing-page.util :as util]
+  (:require [landing-page.context.i18n :as i18n]
+            [landing-page.util :as util]
             [reagent-mui.material.text-field :refer [text-field]]
+            [reagent-mui.material.tooltip :refer [tooltip]]
             [reagent-mui.icons.visibility :refer [visibility]]
             [reagent-mui.icons.visibility-off :refer [visibility-off]]
             [reagent.core :as r]
             [reagent-mui.material.icon-button :refer [icon-button]]))
 
 (defn pwd-visible-icon-btn [state]
-  [icon-button
-   {:on-click #(swap! state update :pwd-visible? not)}
-   (if (:pwd-visible? @state)
-     [visibility-off]
-     [visibility])])
+  (let [visible? (:pwd-visible? @state)]
+    [tooltip {:title (i18n/t (if visible?
+                               :hide-pwd
+                               :show-pwd))}
+     [icon-button
+      {:on-click #(swap! state update :pwd-visible? not)}
+      (if (:pwd-visible? @state)
+        [visibility-off]
+        [visibility])]]))
 
 (defn- password-props [state]
   {:InputProps {:end-adornment

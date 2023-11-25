@@ -14,7 +14,8 @@
             [landing-page.util :as util]
             [reagent-mui.material.collapse :refer [collapse]]
             [reitit.frontend.easy :as rfe]
-            [landing-page.components.text-field :refer [my-text-field]]))
+            [landing-page.components.text-field :refer [my-text-field]]
+            [landing-page.context.i18n :as i18n]))
 
 (def ^:const ^:private company-description
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Iaculis eu non diam phasellus vestibulum lorem sed risus ultricies.")
@@ -29,36 +30,30 @@
    [visibility]])
 
 (defn- login-text-field [props]
-  [my-text-field (merge {:sx {:py 1}
-                         :variant "filled"}
+  [my-text-field (merge {:margin "dense"}
                         props)])
 
 (defn- login-inputs []
   [paper {:sx {:p 2
                :display "flex"
                :flex-direction "column"}
-          :elevation 2}
-   [login-text-field {:label "Email or phone"}]
-   [login-text-field {:label "Password"}]])
+          :elevation 5}
+   [login-text-field {:label (i18n/t :email)}]
+   [login-text-field {:label (i18n/t :password)}]])
 
 (defn- continue-btn []
   [button
    {:variant "contained"
     :full-width true
     :on-click #()}
-   "Log in"])
+   (i18n/t :login/btn)])
 
 (defn- create-account-box []
   [box {:display "flex"
         :align-items "center"}
-   "Don't have an account?"
-   [text-btn {:label "Create an account"
-              :on-click (fn []
-                          (rfe/navigate :create-account)) #_#(do (prn "repl")                 ;  (rfe/push-state :create-account)
-                               (set! (.-location js/window) "create-account")
-                               )
-              ;:href "/create-account"
-              }]])
+   (i18n/t :login/not-account?)
+   [text-btn {:label (i18n/t :create-account)
+              :on-click (fn [] (rfe/navigate :create-account))}]])
 
 (defn- left-container []
   [stack {:direction "column"
@@ -68,10 +63,10 @@
           :height 1
           :justify-content "center"
           :px 8}
-   [typography {:variant "h4"} "Login into your account"]
+   [typography {:variant "h4"} (i18n/t :login/desc)]
    [login-inputs]
    [box {:display "flex" :justify-content "flex-end" :mt -2}
-    [text-btn {:label "Forgot password?"}]]
+    [text-btn {:label (i18n/t :forgot-password?)}]]
    [continue-btn]
    [create-account-box]])
 
@@ -81,29 +76,32 @@
                                    (-> m
                                        (update :description str next-char)
                                        (update :remaining-desc rest))))]
-    (when (seq remaining-desc)
-      (js/setTimeout #(write-effect description-state) 10))))
+    (if (seq remaining-desc)
+      (js/setTimeout #(write-effect description-state) 10)
+      (swap! description-state assoc :finished? true))))
 
 (defn- right-container []
-  (let [description-state (r/atom {:description ""
-                                   :remaining-desc (seq company-description)})]
-    (write-effect description-state)
-    (fn []
-      [:<>
-       [typography {:variant "h3"
-                    :color "primary"}
-        util/company-name]
-       [typography
-        [typography {:component "span"
-                     :sx {:color "common.black"}}
-         (:description @description-state)]
-        [typography {:component "span"
-                     :color "secondary"
-                     :sx {:font-size "6rem" :line-height 0}}
-         "."]]])))
+  (when (util/listen [:landing-page.settings.subs/prefered-language])
+    (let [description-state (r/atom {:description ""
+                                     :remaining-desc (seq (i18n/t :company-details/landing-desc))})]
+      (write-effect description-state)
+      (fn []
+        [:<>
+         [typography {:variant "h3"
+                      :color "primary"}
+          util/company-name]
+         [typography
+          [typography {:component "span"
+                       :sx {:color "common.black"}}
+           (if-not (:finished? @description-state)
+             (:description @description-state)
+             (i18n/t :company-details/landing-desc))]
+          [typography {:component "span"
+                       :color "secondary"
+                       :sx {:font-size "6rem" :line-height 0}}
+           "."]]]))))
 
 (defn main []
-
   [unstable-grid-2 {:container true
                     :columns 2
                     :height 1}

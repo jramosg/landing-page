@@ -2,7 +2,7 @@
   (:require [re-frame.core :as rf]
             [reitit.frontend.easy :as rfe]))
 
-(def ^:const company-name "Company name")
+(def ^:const company-name "URNIETA")
 
 (defn field-value [e]
   (-> e .-target .-value))

@@ -15,7 +15,8 @@
     [reitit.frontend.easy :as rfe]
     [landing-page.create-account.view :as create-account.view]
     [reagent-mui.material.box :refer [box]]
-    [landing-page.loading :as loading]))
+    [landing-page.loading :as loading]
+    [landing-page.context.i18n :as i18n]))
 
 (defonce match (r/atom nil))
 
@@ -65,6 +66,7 @@
                      (if new-match
                        (assoc new-match :controllers (rfc/apply-controllers (:controllers old-match) new-match))))))
     {:use-fragment true})
+  (i18n/start)
   (mount-root))
 
 (init!)

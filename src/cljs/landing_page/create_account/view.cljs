@@ -1,5 +1,6 @@
 (ns landing-page.create-account.view
   (:require [cljs.spec.alpha :as s]
+            [landing-page.context.i18n :as i18n]
             [landing-page.util :as util]
             [reagent-mui.material.paper :refer [paper]]
             [reagent-mui.material.box :refer [box]]
@@ -13,10 +14,8 @@
             [reagent-mui.material.button :refer [button]]
             [landing-page.forms.events :as forms.events]
             [landing-page.forms.constants :as forms.constants]
-            [landing-page.forms.subs :as forms.subs]
             [landing-page.create-account.subs :as create-account.subs]
             [reagent-mui.icons.error :refer [error]]
-            [reitit.frontend.easy :as rfe]
             [landing-page.create-account.events :as create-account.events]))
 
 (s/def ::email #(re-matches #"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" (or % "")))
@@ -36,10 +35,10 @@
   (let [v (util/listen [::create-account.subs/email])
         error? (and (util/listen [::create-account.subs/inital-submit-dispatched?])
                     (not (s/valid? ::email v)))]
-    [my-text-field {:label "Email"
+    [my-text-field {:label (i18n/t :email)
                     :error error?
                     :on-change #(util/>evt [::forms.events/set-field-value form-id :email %])
-                    :helper-text (when error? "Check email format" )}]))
+                    :helper-text (when error? (i18n/t :wrong-email-format))}]))
 
 (defn- error-row [error-text]
   [stack {:align-items "center" :direction "row" :spacing 1 :color "error.main"}
@@ -52,22 +51,22 @@
   (let [initial-submit-dispatched? (util/listen [::create-account.subs/inital-submit-dispatched?])
         v (util/listen [::create-account.subs/password])
         error? (and initial-submit-dispatched? (not (s/valid? ::password v)))]
-    [box
-     [my-text-field {:label "Password"
+    [:div
+     [my-text-field {:label (i18n/t :password)
                      :type "password"
                      :error error?
                      :value (util/listen [::create-account.subs/password])
                      :on-change #(util/>evt [::forms.events/set-field-value form-id :password %])
                      :helper-text (when-not initial-submit-dispatched?
-                                    "Password must have at least 8 chars, with 1 uppercase and 1 number")}]
+                                    (i18n/t :password-requirement/full-desc))}]
      (when initial-submit-dispatched?
        [:<>
         (when (not (s/valid? ::count-8 v))
-          [error-row "At least 8 char"])
+          [error-row (i18n/t :password-requirement/min-8-char)])
         (when (not (s/valid? ::one-upper-case v))
-          [error-row "At least 1 uppercase"])
+          [error-row (i18n/t :password-requirement/an-upper-case)])
         (when (not (s/valid? ::one-number v))
-          [error-row "At least 1 number"])])]))
+          [error-row (i18n/t :password-requirement/a-number)])])]))
 
 (defn- on-create-account-click []
   (when-not (util/listen [::create-account.subs/inital-submit-dispatched?])
@@ -77,16 +76,16 @@
 
 (defn terms-input []
   (let [v (util/listen [::create-account.subs/accepted-terms?])]
-    [box
+    [:div
      [form-control-label
-      {:label "I agree the terms and privacy"
+      {:label (i18n/t :agree-terms)
        :control (r/as-element [checkbox {:checked v
                                          :color "secondary"}])
        :on-change (fn [_ v]
                     (util/>evt [::forms.events/set-field-value form-id :accepted-terms? v]))}]
      (when (and (util/listen [::create-account.subs/inital-submit-dispatched?])
                 (not (s/valid? ::accepted-terms? v)))
-       [error-row "You must accept the terms and privacy"])]))
+       [error-row (i18n/t :must-accept-terms)])]))
 
 (defn main [_]
   (r/create-class
@@ -106,4 +105,4 @@
             [terms-input]
             [button {:variant "contained"
                      :on-click on-create-account-click}
-             "CREATE ACCOUNT"]]]]]])}))
+             (i18n/t :create-account)]]]]]])}))
