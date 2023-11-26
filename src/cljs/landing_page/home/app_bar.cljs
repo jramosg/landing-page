@@ -1,14 +1,11 @@
 (ns landing-page.home.app-bar
-  (:require [landing-page.util :as util]
-            [reagent-mui.components :as mui.components]
+  (:require [reagent-mui.components :as mui.components]
             [reagent-mui.material.stack :refer [stack]]
             [reagent.core :as r]
-            [reagent-mui.icons.dark-mode :refer [dark-mode]]
-            [reagent-mui.icons.light-mode :refer [light-mode]]
-            [re-frame.core :as rf]
-            [landing-page.theming.events :as theming.events]
-            [landing-page.theming.subs :as theming.subs]
             [reagent-mui.icons.business :refer [business]]
+            [reagent-mui.styles :as styles]
+
+            [landing-page.util :as util]
             [landing-page.settings.views :as settings.views]))
 
 (defn- app-bar-content []
@@ -19,6 +16,9 @@
     [settings.views/language-selector-icon-btn]
     [settings.views/theme-mode-switch]]])
 
+(def ^:private offset (styles/styled "div"
+                           (fn [{:keys [theme]}]
+                             (get-in theme [:mixins :toolbar]))))
 (defn main []
   (let [scroll-trigger (mui.components/use-scroll-trigger {:threshold 0})]
     (r/as-element
@@ -29,4 +29,4 @@
         [mui.components/toolbar
          {:sx {:justify-content "space-between"}}
          [app-bar-content]]]
-       [mui.components/toolbar]])))
+       [offset {:id "appbar-offset"}]])))

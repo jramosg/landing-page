@@ -16,7 +16,8 @@
             [landing-page.forms.constants :as forms.constants]
             [landing-page.create-account.subs :as create-account.subs]
             [reagent-mui.icons.error :refer [error]]
-            [landing-page.create-account.events :as create-account.events]))
+            [landing-page.create-account.events :as create-account.events]
+            [landing-page.forms.subs :as forms.subs]))
 
 (s/def ::email #(re-matches #"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" (or % "")))
 
@@ -31,14 +32,16 @@
 
 (def ^:const ^:private form-id forms.constants/create-account-form-id)
 
+(defn- get-v [kw]
+  (util/listen [::forms.subs/field-value form-id kw]))
+
 (defn- email-container []
-  (let [v (util/listen [::create-account.subs/email])
-        error? (and (util/listen [::create-account.subs/inital-submit-dispatched?])
-                    (not (s/valid? ::email v)))]
-    [my-text-field {:label (i18n/t :email)
-                    :error error?
-                    :on-change #(util/>evt [::forms.events/set-field-value form-id :email %])
-                    :helper-text (when error? (i18n/t :wrong-email-format))}]))
+  [my-text-field
+   {:label (i18n/t :email)}
+   {:form-id form-id
+    :field-path :email
+    :field-spec ::email
+    :validation-error-msg :wrong-email-format}])
 
 (defn- error-row [error-text]
   [stack {:align-items "center" :direction "row" :spacing 1 :color "error.main"}
@@ -49,16 +52,16 @@
 
 (defn- password-container []
   (let [initial-submit-dispatched? (util/listen [::create-account.subs/inital-submit-dispatched?])
-        v (util/listen [::create-account.subs/password])
-        error? (and initial-submit-dispatched? (not (s/valid? ::password v)))]
+        v (get-v :password)]
     [:div
-     [my-text-field {:label (i18n/t :password)
-                     :type "password"
-                     :error error?
-                     :value (util/listen [::create-account.subs/password])
-                     :on-change #(util/>evt [::forms.events/set-field-value form-id :password %])
-                     :helper-text (when-not initial-submit-dispatched?
-                                    (i18n/t :password-requirement/full-desc))}]
+     [my-text-field
+      {:label (i18n/t :password)
+       :type "password"
+       :helper-text (when-not initial-submit-dispatched?
+                      (i18n/t :password-requirement/full-desc))}
+      {:form-id form-id
+       :field-path :password
+       :field-spec ::password}]
      (when initial-submit-dispatched?
        [:<>
         (when (not (s/valid? ::count-8 v))
@@ -71,11 +74,11 @@
 (defn- on-create-account-click []
   (when-not (util/listen [::create-account.subs/inital-submit-dispatched?])
     (util/>evt [::forms.events/set-initial-submit-dispatched form-id]))
-  (when (s/valid? ::form (util/listen [::create-account.subs/values]))
+  (when (s/valid? ::form (util/listen [::forms.subs/form-values form-id]))
     (util/>evt [::create-account.events/create-account])))
 
 (defn terms-input []
-  (let [v (util/listen [::create-account.subs/accepted-terms?])]
+  (let [v (or (get-v :accepted-terms?) false)]
     [:div
      [form-control-label
       {:label (i18n/t :agree-terms)
@@ -92,14 +95,14 @@
     {:component-will-unmount #(util/>evt [::forms.events/clean-form-state form-id])
      :reagent-render
      (fn []
-       (prn "values :accepted-terms?" (util/listen [::create-account.subs/values]))
        [box {:height 1 :display "flex" :align-items "center"}
         [container {:max-width "sm"}
          [stack {:spacing 1 :direction "column"}
           [paper {:elevation 5
                   :sx {:padding 2}}
            [stack {:spacing 2
-                   :direction "column"}
+                   :direction "column"
+                   :component "form"}
             [email-container]
             [password-container]
             [terms-input]

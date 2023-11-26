@@ -1,11 +1,8 @@
 (ns landing-page.core
   (:require
     [landing-page.home.app-bar :as app-bar]
-    [landing-page.util :as util]
     [reagent.core :as r]
-    [reagent.core :as reagent :refer [atom]]
     [reagent.dom :as rdom]
-    [reagent.session :as session]
     [reitit.frontend :as reitit]
     [landing-page.home.view :as home.view]
     [reagent-mui.material.css-baseline :refer [css-baseline]]
@@ -26,11 +23,15 @@
    [styles/theme-provider (theme-provider/main)
     [css-baseline]
     [loading/main]
-    [box {:id "main-container" :height 1}
+    [box {:id "main-container"
+          :height 1
+          :display "flex"
+          :flex-direction "column"}
      [:> app-bar/main]
-     (when @match
-       (let [view (:view (:data @match))]
-         [view @match]))]]])
+     [box {:flex 1}
+      (when @match
+        (let [view (:view (:data @match))]
+          [view @match]))]]]])
 
 (defn mount-root []
   (rdom/render

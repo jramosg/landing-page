@@ -8,27 +8,3 @@
   :<- [::forms.subs/flags]
   (fn [flags]
     (get-in flags [forms.constants/create-account-form-id :initial-submit-dispatched?])))
-
-(rf/reg-sub
-  ::values
-  :<- [::forms.subs/values]
-  (fn [values]
-    (forms.constants/create-account-form-id values)))
-
-(rf/reg-sub
-  ::email
-  :<- [::values]
-  (fn [values]
-    (:email values)))
-
-(rf/reg-sub
-  ::password
-  :<- [::values]
-  (fn [values]
-    (:password values)))
-
-(rf/reg-sub
-  ::accepted-terms?
-  :<- [::values]
-  (fn [values]
-    (:accepted-terms? values false)))

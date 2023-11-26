@@ -1,6 +1,8 @@
 (ns landing-page.forms.events
   (:require [re-frame.core :as rf]
-            [landing-page.forms.constants :as constants]))
+            [landing-page.forms.constants :as constants]
+            [landing-page.forms.db :as db]))
+
 
 (rf/reg-event-db
   ::set-flag-value
@@ -23,5 +25,5 @@
   ::set-field-value
   (fn [db [_ form-id field-path new-value]]
     (assoc-in db (vec (concat constants/values-db-path
-                              (cons form-id (cond-> field-path (keyword? field-path) vector))))
+                              (cons form-id (db/get-field-path field-path))))
               new-value)))
