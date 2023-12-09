@@ -8,6 +8,8 @@
                  [ring-server "0.5.0"]
                  [reagent "1.2.0"]
                  [reagent-utils "0.3.4"]
+                 [cljsjs/react "17.0.2-0"]
+                 [cljsjs/react-dom "17.0.2-0"]
                  [ring "1.9.5"]
                  [ring/ring-defaults "0.3.3"]
                  [hiccup "1.0.5"]
