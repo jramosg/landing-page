@@ -23,4 +23,19 @@
 
    :login "Create an account"
 
-   :company-details/landing-desc "This is a short description about the company"})
+   :company-details/landing-desc "This is a short description about the company"
+
+   :home "Home"
+   :about-me "About me"
+   :pets "Dog"
+   :logout "Log out"
+
+   :typography "Typography"
+   :size "Size"
+   :font-family "Font type"
+   :nereas-fav "Nerea's favourite"
+   :text-view-desc "With this settings, ordinary text looks like this"
+   :color "Color"
+   :primary-color "Primary"
+   :secondary-color "Secondary"
+   :color-examples "Sample for light/primary/dark colors"})

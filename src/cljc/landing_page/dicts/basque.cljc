@@ -20,4 +20,19 @@
    :password-requirement/an-upper-case "Gutxienez letra larri bat"
    :password-requirement/a-number "Gutxienez zenbaki bat"
 
-   :company-details/landing-desc "Enpresari buruzko deskribapen motza"})
+   :company-details/landing-desc "Enpresari buruzko deskribapen motza"
+
+   :home "Hasiera"
+   :about-me "Niri buruz"
+   :pets "Txakurra"
+   :logout "Irten"
+
+   :typography "Tipografia"
+   :size "Tamaina"
+   :font-family "Letra mota"
+   :nereas-fav "Nerean gustokoena"
+   :text-view-desc "Konfigurazio hau aukeratuta, textu arruntak itxura hau du"
+   :color "Kolorea"
+   :primary-color "Nagusia"
+   :secondary-color "Sekundarioa"
+   :color-examples "Kolore argi, nagusi eta ilunen eredua"})

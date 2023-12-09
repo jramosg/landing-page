@@ -1,7 +1,38 @@
 (ns landing-page.theming.events
-  (:require [re-frame.core :as rf]))
+  (:require [re-frame.core :as rf]
+            [landing-page.theming.constants :as constants]))
 
 (rf/reg-event-db
   ::change-theme-kw
   (fn [db [_ kw v]]
-    (assoc-in db [:theme kw] v)))
+    (assoc-in db (conj constants/theme-root-path kw) v)))
+
+(rf/reg-event-db
+  ::change-font-size
+  (fn [db [_ v]]
+    (assoc-in db constants/font-size-path v)))
+
+(rf/reg-event-db
+  ::change-light-offset
+  (fn [db [_ v]]
+    (assoc-in db constants/light-offset-path v)))
+
+(rf/reg-event-db
+  ::change-dark-offset
+  (fn [db [_ v]]
+    (assoc-in db constants/dark-offset-path v)))
+
+(rf/reg-event-db
+  ::change-font-family
+  (fn [db [_ v]]
+    (assoc-in db constants/font-family-path v)))
+
+(rf/reg-event-db
+  ::change-primary-color
+  (fn [db [_ v]]
+    (assoc-in db constants/primary-color-path v)))
+
+(rf/reg-event-db
+  ::change-secondary-color
+  (fn [db [_ v]]
+    (assoc-in db constants/secondary-color-path v)))

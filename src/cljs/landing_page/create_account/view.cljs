@@ -98,6 +98,7 @@
        [box {:height 1 :display "flex" :align-items "center"}
         [container {:max-width "sm"}
          [stack {:spacing 1 :direction "column"}
+          [typography {:variant "h4"} (i18n/t :create-account)]
           [paper {:elevation 5
                   :sx {:padding 2}}
            [stack {:spacing 2

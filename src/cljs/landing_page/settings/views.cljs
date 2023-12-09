@@ -64,5 +64,6 @@
                         :selected (= value prefered-language)
                         :key (name value)
                         :sx {"&.Mui-selected" {:background-color "primary.light"
-                                               "&:hover" {:background-color "primary.light"}}}}
+                                               "&:hover" {:background-color "primary.light"}
+                                               :color "textOnLight.main"}}}
              label])]]))))
