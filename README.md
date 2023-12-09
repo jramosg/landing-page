@@ -1,3 +1,8 @@
+# Clojure MUI template
+
+A MUI template build with ClojureScript.
+You can see results in https://clojure-mui-template-578c2e84eb00.herokuapp.com/
+
 # landing-page
 
 This is the landing-page project.
