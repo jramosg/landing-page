@@ -1,5 +1,5 @@
 (ns landing-page.landing.view
-  (:require [reagent-mui.material.unstable-grid-2 :refer [unstable-grid-2]]
+  (:require [reagent-mui.material.grid :refer [grid]]
             [reagent-mui.material.typography :refer [typography]]
             [reagent-mui.material.paper :refer [paper]]
             [reagent-mui.icons.visibility :refer [visibility]]
@@ -101,18 +101,17 @@
             "."]]]]))))
 
 (defn main []
-  [unstable-grid-2 {:container true
-                    :columns 2
-                    :height 1}
-   [unstable-grid-2 {:sm 2 :md 1 :height 1 :align-items "center" :container true}
+  [grid {:container true
+         :height 1}
+   [grid {:sm 12 :md 6 :height 1 :align-items "center" :container true}
     [left-container]]
-   [unstable-grid-2 {:sm 2
-                     :md 1
-                     :bgcolor "primary.light"
-                     :justify-content "center"
-                     :display "flex"
-                     :flex-direction "column"
-                     :p 4
-                     :height 1
-                     :wrap "wrap"}
+   [grid {:sm 12
+          :md 6
+          :bgcolor "primary.light"
+          :justify-content "center"
+          :display "flex"
+          :flex-direction "column"
+          :p 4
+          :height 1
+          :wrap "wrap"}
     [right-container]]])
