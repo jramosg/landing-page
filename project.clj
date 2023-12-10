@@ -28,7 +28,9 @@
   :plugins [[lein-environ "1.1.0"]
             [lein-cljsbuild "1.1.7"]
             [lein-asset-minifier "0.4.6"
-             :exclusions [org.clojure/clojure]]]
+             :exclusions [org.clojure/clojure]]
+            [ns-sort "1.0.3"]
+            [dev.weavejester/lein-cljfmt "0.12.0"]]
 
   :ring {:handler landing-page.handler/app
          :uberwar-name "landing-page.war"}

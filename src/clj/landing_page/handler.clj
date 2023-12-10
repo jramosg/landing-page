@@ -1,9 +1,8 @@
 (ns landing-page.handler
-  (:require
-   [reitit.ring :as reitit-ring]
-   [landing-page.middleware :refer [middleware]]
-   [hiccup.page :refer [include-js include-css html5]]
-   [config.core :refer [env]]))
+  (:require [landing-page.middleware :refer [middleware]]
+            [config.core :refer [env]]
+            [hiccup.page :refer [include-js include-css html5]]
+            [reitit.ring :as reitit-ring]))
 
 (def mount-target
   [:div#app])
@@ -30,10 +29,8 @@
     mount-target
     (include-js "/js/app.js")]))
 
-
 (defn index-handler
   [_request]
-  (prn "Index")
   {:status 200
    :headers {"Content-Type" "text/html"}
    :body (loading-page)})

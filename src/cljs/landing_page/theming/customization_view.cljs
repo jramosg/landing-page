@@ -1,27 +1,26 @@
 (ns landing-page.theming.customization-view
   (:require [landing-page.context.i18n :as i18n]
             [landing-page.theming.constants :as constants]
+            [landing-page.theming.events :as events]
+            [landing-page.theming.subs :as subs]
             [landing-page.util :as util]
             [reagent-mui.material.box :refer [box]]
             [reagent-mui.material.container :refer [container]]
-            [reagent-mui.material.slider :refer [slider]]
-            [reagent-mui.material.paper :refer [paper]]
-            [reagent-mui.material.stack :refer [stack]]
-            [reagent-mui.material.typography :refer [typography]]
-            [reagent-mui.material.select :refer [select]]
-            [reagent-mui.material.menu-item :refer [menu-item]]
-            [reagent-mui.material.text-field :refer [text-field]]
             [reagent-mui.material.grid :refer [grid]]
-
-            [landing-page.theming.events :as events]
-            [landing-page.theming.subs :as subs]
+            [reagent-mui.material.menu-item :refer [menu-item]]
+            [reagent-mui.material.paper :refer [paper]]
+            [reagent-mui.material.select :refer [select]]
+            [reagent-mui.material.slider :refer [slider]]
+            [reagent-mui.material.stack :refer [stack]]
+            [reagent-mui.material.text-field :refer [text-field]]
+            [reagent-mui.material.typography :refer [typography]]
             [reagent-mui.styles :as styles]))
 
 (def my-paper
   (styles/styled
-    paper
-    (fn [{{:keys [spacing]} :theme}]
-      {:padding (spacing 2)})))
+   paper
+   (fn [{{:keys [spacing]} :theme}]
+     {:padding (spacing 2)})))
 
 (def ^:const min-font-size 10)
 (def ^:const max-font-size 30)
@@ -46,7 +45,7 @@
              :max max-font-size
              :value-label-display "on"
              :valueLabelFormat (fn [e]
-                                    (str e "px"))
+                                 (str e "px"))
              :marks font-size-marks}]]])
 
 (defn font-style-selector []

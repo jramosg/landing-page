@@ -1,10 +1,9 @@
 (ns landing-page.context.i18n
-  (:require [clojure.string :as str]
-            [landing-page.dicts.main :as dicts]
-            [landing-page.util :as util]
+  (:require [landing-page.dicts.main :as dicts]
             [landing-page.settings.events :as settings.events]
-            [landing-page.settings.subs :as settings.sus]))
-
+            [landing-page.settings.subs :as settings.sus]
+            [landing-page.util :as util]
+            [clojure.string :as str]))
 
 (defn t
   [& args]
@@ -19,5 +18,4 @@
       keyword))
 
 (defn start []
-  (when-not (util/listen [::settings.sus/prefered-language])
-    (util/>evt [::settings.events/set-prefered-language (fetch-local-language)])))
+  (util/>evt [::settings.events/set-prefered-language (fetch-local-language)]))

@@ -1,6 +1,5 @@
 (ns landing-page.theming.constants)
 
-
 ;;; Default values
 (def ^:const default-font-size 14)
 (def ^:const default-font-family ["Roboto" "Helvetica" "Arial" "sans-serif"])

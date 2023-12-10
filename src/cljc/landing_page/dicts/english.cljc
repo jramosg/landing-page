@@ -28,6 +28,7 @@
    :home "Home"
    :about-me "About me"
    :pets "Dog"
+   :configuration "Configuration"
    :logout "Log out"
 
    :typography "Typography"
@@ -38,4 +39,7 @@
    :color "Color"
    :primary-color "Primary"
    :secondary-color "Secondary"
-   :color-examples "Sample for light/primary/dark colors"})
+   :color-examples "Sample for light/primary/dark colors"
+
+   :my-profile "My profile"
+   :notifications "Notifications"})

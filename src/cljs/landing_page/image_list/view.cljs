@@ -1,9 +1,9 @@
 (ns landing-page.image-list.view
-  (:require [reagent-mui.material.container :refer [container]]
-            [reagent-mui.material.box :refer [box]]
-            [reagent-mui.material.typography :refer [typography]]
+  (:require [reagent-mui.material.box :refer [box]]
+            [reagent-mui.material.container :refer [container]]
             [reagent-mui.material.image-list :refer [image-list]]
             [reagent-mui.material.image-list-item :refer [image-list-item]]
+            [reagent-mui.material.typography :refer [typography]]
             [reagent-mui.styles :as styles]))
 
 (def ^:const ^:private images
@@ -23,10 +23,10 @@
 
 (def ^:private image-comp
   (styles/styled
-    "img"
-    {:height "100%"
-     :width "100%"
-     :object-fit "cover"}))
+   "img"
+   {:height "100%"
+    :width "100%"
+    :object-fit "cover"}))
 
 (defn main []
   [box {:p 4}

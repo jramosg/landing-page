@@ -1,10 +1,9 @@
 (ns landing-page.middleware
-  (:require
-   [ring.middleware.content-type :refer [wrap-content-type]]
-   [ring.middleware.params :refer [wrap-params]]
-   [prone.middleware :refer [wrap-exceptions]]
-   [ring.middleware.reload :refer [wrap-reload]]
-   [ring.middleware.defaults :refer [site-defaults wrap-defaults]]))
+  (:require [prone.middleware :refer [wrap-exceptions]]
+            [ring.middleware.content-type :refer [wrap-content-type]]
+            [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+            [ring.middleware.params :refer [wrap-params]]
+            [ring.middleware.reload :refer [wrap-reload]]))
 
 (def middleware
   [#(wrap-defaults % site-defaults)

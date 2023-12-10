@@ -25,6 +25,7 @@
    :home "Hasiera"
    :about-me "Niri buruz"
    :pets "Txakurra"
+   :configuration "Ezarpenak"
    :logout "Irten"
 
    :typography "Tipografia"
@@ -35,4 +36,7 @@
    :color "Kolorea"
    :primary-color "Nagusia"
    :secondary-color "Sekundarioa"
-   :color-examples "Kolore argi, nagusi eta ilunen eredua"})
+   :color-examples "Kolore argi, nagusi eta ilunen eredua"
+
+   :my-profile "Nire profila"
+   :notifications "Jakinarazpenak"})

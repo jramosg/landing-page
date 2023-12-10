@@ -11,6 +11,6 @@
 (def >evt rf/dispatch)
 
 (rf/reg-fx
-  :navigate
-  (fn [loc & [opts]]
-    (rfe/navigate loc opts)))
+ :navigate
+ (fn [loc & [opts]]
+   (rfe/navigate loc opts)))

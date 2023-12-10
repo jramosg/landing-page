@@ -1,19 +1,19 @@
 (ns landing-page.landing.view
-  (:require [reagent-mui.material.grid :refer [grid]]
-            [reagent-mui.material.typography :refer [typography]]
-            [reagent-mui.material.paper :refer [paper]]
-            [reagent-mui.icons.visibility :refer [visibility]]
-            [reagent-mui.material.input-adornment :refer [input-adornment]]
-            [reagent.core :as r]
-            [reagent-mui.material.button :refer [button]]
-            [reagent-mui.material.box :refer [box]]
-            [reagent-mui.material.stack :refer [stack]]
-            [reagent-mui.material.grow :refer [grow]]
-            [landing-page.util :as util]
-            [reitit.frontend.easy :as rfe]
-            [landing-page.components.text-field :refer [my-text-field]]
+  (:require [landing-page.components.text-field :refer [my-text-field]]
             [landing-page.context.i18n :as i18n]
-            [reagent-mui.material.container :refer [container]]))
+            [landing-page.util :as util]
+            [reagent-mui.icons.visibility :refer [visibility]]
+            [reagent-mui.material.box :refer [box]]
+            [reagent-mui.material.button :refer [button]]
+            [reagent-mui.material.container :refer [container]]
+            [reagent-mui.material.grid :refer [grid]]
+            [reagent-mui.material.grow :refer [grow]]
+            [reagent-mui.material.input-adornment :refer [input-adornment]]
+            [reagent-mui.material.paper :refer [paper]]
+            [reagent-mui.material.stack :refer [stack]]
+            [reagent-mui.material.typography :refer [typography]]
+            [reagent.core :as r]
+            [reitit.frontend.easy :as rfe]))
 
 (defn- text-btn [{:keys [label] :as props}]
   [button (merge {:color "secondary"}
@@ -40,8 +40,7 @@
   [button
    {:variant "contained"
     :full-width true
-    :on-click #(rfe/navigate :route/home)
-    :role-ident "login button"}
+    :on-click #(rfe/navigate :route/home)}
    (i18n/t :login/btn)])
 
 (defn- create-account-box []
@@ -85,12 +84,10 @@
         [grow {:in true :timeout 2000}
          [:div#landing-company-details
           [typography {:variant "h3"
-                       :role-ident "landing-company-name"
                        :color "primary"}
            util/company-name]
           [typography
            [typography {:component "span"
-                        :role-ident "landing-company-description"
                         :sx {:color "common.black"}}
             (if-not (:finished? @description-state)
               (:description @description-state)
@@ -107,6 +104,7 @@
     [left-container]]
    [grid {:sm 12
           :md 6
+          :width 1
           :bgcolor "primary.light"
           :justify-content "center"
           :display "flex"

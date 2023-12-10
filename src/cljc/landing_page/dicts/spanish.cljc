@@ -16,7 +16,6 @@
    :login/btn "Iniciar sesión"
    :login/not-account? "¿No tienes cuenta?"
 
-
    :password-requirement/full-desc "La contraseña debe tener al menos 8 caracteres, una mayúscla y un número"
    :password-requirement/min-8-char "Al menos 8 caracteres"
    :password-requirement/an-upper-case "Al menos una mayúscula"
@@ -37,4 +36,7 @@
    :color "Color"
    :primary-color "Primario"
    :secondary-color "Secundario"
-   :color-examples "Muestra de los colores claro/principal/oscuro"})
+   :color-examples "Muestra de los colores claro/principal/oscuro"
+
+   :my-profile "Mi perfil"
+   :notifications "Notificacines"})

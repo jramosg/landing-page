@@ -1,22 +1,22 @@
 (ns landing-page.home.view
   (:require [landing-page.context.i18n :as i18n]
-            [reagent-mui.material.drawer :refer [drawer]]
-            [reagent-mui.material.box :refer [box]]
-            [reagent-mui.styles :as styles]
-            [reagent.core :as r]
             [reagent-mui.icons.home :refer [home]]
+            [reagent-mui.material.box :refer [box]]
             [reagent-mui.material.container :refer [container]]
+            [reagent-mui.material.drawer :refer [drawer]]
             [reagent-mui.material.paper :refer [paper]]
-            [reagent-mui.material.typography :refer [typography]]))
+            [reagent-mui.material.typography :refer [typography]]
+            [reagent-mui.styles :as styles]
+            [reagent.core :as r]))
 
 (def drawer-width 240)
 
 (def my-drawer
   (styles/styled
-    drawer
-    (fn [{:keys [open? theme]}]
-      (prn "open? " open?)
-      #_(merge
+   drawer
+   (fn [{:keys [open? theme]}]
+     (prn "open? " open?)
+     #_(merge
 
         (if @open?
           {:color "red"
@@ -24,7 +24,7 @@
           {:color "blue"
            :background-color "red"
            :width drawer-width}))
-      {"& .MuiDrawer-paper" {:width drawer-width}})))
+     {"& .MuiDrawer-paper" {:width drawer-width}})))
 
 (defn main []
   [box {:bgcolor "primary.light"

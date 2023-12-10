@@ -5,9 +5,9 @@
             [reagent-mui.material.circular-progress :refer [circular-progress]]))
 
 (rf/reg-sub
-  ::loading?
-  (fn [db]
-    (:loading? db false)))
+ ::loading?
+ (fn [db]
+   (:loading? db false)))
 
 (defn- backdrop-z-index [theme]
   (inc (get-in (js->clj theme :keywordize-keys true) [:zIndex :drawer])))

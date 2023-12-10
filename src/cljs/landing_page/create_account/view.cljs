@@ -1,23 +1,23 @@
 (ns landing-page.create-account.view
-  (:require [cljs.spec.alpha :as s]
+  (:require [landing-page.components.text-field :refer [my-text-field]]
             [landing-page.context.i18n :as i18n]
-            [landing-page.util :as util]
-            [reagent-mui.material.paper :refer [paper]]
-            [reagent-mui.material.box :refer [box]]
-            [reagent-mui.material.stack :refer [stack]]
-            [reagent-mui.material.container :refer [container]]
-            [landing-page.components.text-field :refer [my-text-field]]
-            [reagent-mui.material.typography :refer [typography]]
-            [reagent-mui.material.form-control-label :refer [form-control-label]]
-            [reagent-mui.material.checkbox :refer [checkbox]]
-            [reagent.core :as r]
-            [reagent-mui.material.button :refer [button]]
-            [landing-page.forms.events :as forms.events]
-            [landing-page.forms.constants :as forms.constants]
-            [landing-page.create-account.subs :as create-account.subs]
-            [reagent-mui.icons.error :refer [error]]
             [landing-page.create-account.events :as create-account.events]
-            [landing-page.forms.subs :as forms.subs]))
+            [landing-page.create-account.subs :as create-account.subs]
+            [landing-page.forms.constants :as forms.constants]
+            [landing-page.forms.events :as forms.events]
+            [landing-page.forms.subs :as forms.subs]
+            [landing-page.util :as util]
+            [cljs.spec.alpha :as s]
+            [reagent-mui.icons.error :refer [error]]
+            [reagent-mui.material.box :refer [box]]
+            [reagent-mui.material.button :refer [button]]
+            [reagent-mui.material.checkbox :refer [checkbox]]
+            [reagent-mui.material.container :refer [container]]
+            [reagent-mui.material.form-control-label :refer [form-control-label]]
+            [reagent-mui.material.paper :refer [paper]]
+            [reagent-mui.material.stack :refer [stack]]
+            [reagent-mui.material.typography :refer [typography]]
+            [reagent.core :as r]))
 
 (s/def ::email #(re-matches #"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" (or % "")))
 
@@ -92,21 +92,21 @@
 
 (defn main [_]
   (r/create-class
-    {:component-will-unmount #(util/>evt [::forms.events/clean-form-state form-id])
-     :reagent-render
-     (fn []
-       [box {:height 1 :display "flex" :align-items "center"}
-        [container {:max-width "sm"}
-         [stack {:spacing 1 :direction "column"}
-          [typography {:variant "h4"} (i18n/t :create-account)]
-          [paper {:elevation 5
-                  :sx {:padding 2}}
-           [stack {:spacing 2
-                   :direction "column"
-                   :component "form"}
-            [email-container]
-            [password-container]
-            [terms-input]
-            [button {:variant "contained"
-                     :on-click on-create-account-click}
-             (i18n/t :create-account)]]]]]])}))
+   {:component-will-unmount #(util/>evt [::forms.events/clean-form-state form-id])
+    :reagent-render
+    (fn []
+      [box {:height 1 :display "flex" :align-items "center"}
+       [container {:max-width "sm"}
+        [stack {:spacing 1 :direction "column"}
+         [typography {:variant "h4"} (i18n/t :create-account)]
+         [paper {:elevation 5
+                 :sx {:padding 2}}
+          [stack {:spacing 2
+                  :direction "column"
+                  :component "form"}
+           [email-container]
+           [password-container]
+           [terms-input]
+           [button {:variant "contained"
+                    :on-click on-create-account-click}
+            (i18n/t :create-account)]]]]]])}))
