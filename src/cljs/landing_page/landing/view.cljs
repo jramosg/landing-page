@@ -100,7 +100,11 @@
 (defn main []
   [grid {:container true
          :height 1}
-   [grid {:sm 12 :md 6 :height 1 :align-items "center" :container true}
+   [grid {:item true :sm 12 :md 6 :height 1
+          :align-items "center"
+          :justify-content "center"
+          :width 1
+          :display "flex"}
     [left-container]]
    [grid {:sm 12
           :md 6
@@ -111,5 +115,5 @@
           :flex-direction "column"
           :p 4
           :height 1
-          :wrap "wrap"}
+          :item true}
     [right-container]]])

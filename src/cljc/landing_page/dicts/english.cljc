@@ -29,6 +29,7 @@
    :about-me "About me"
    :pets "Dog"
    :configuration "Configuration"
+   :login-page "See landing page"
    :logout "Log out"
 
    :typography "Typography"

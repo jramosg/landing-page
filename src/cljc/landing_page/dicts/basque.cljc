@@ -26,6 +26,7 @@
    :about-me "Niri buruz"
    :pets "Txakurra"
    :configuration "Ezarpenak"
+   :login-page "Landing page ikusi"
    :logout "Irten"
 
    :typography "Tipografia"

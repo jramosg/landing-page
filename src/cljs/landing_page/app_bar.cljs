@@ -6,10 +6,11 @@
             [reagent-mui.icons.app-settings-alt :refer [app-settings-alt]]
             [reagent-mui.icons.arrow-back :refer [arrow-back]]
             [reagent-mui.icons.business :refer [business]]
+            [reagent-mui.icons.desktop-mac-outlined :refer [desktop-mac-outlined]]
             [reagent-mui.icons.emoji-people :refer [emoji-people]]
             [reagent-mui.icons.home :refer [home]]
             [reagent-mui.icons.logout :refer [logout]]
-            [reagent-mui.icons.menu :as icons.menu]
+            [reagent-mui.icons.menu :refer [menu] :rename {menu menu-icon}]
             [reagent-mui.icons.notifications-outlined :refer [notifications-outlined]]
             [reagent-mui.icons.pets :refer [pets]]
             [reagent-mui.material.app-bar :refer [app-bar]]
@@ -29,8 +30,10 @@
             [reagent-mui.material.stack :refer [stack]]
             [reagent-mui.material.toolbar :refer [toolbar]]
             [reagent-mui.material.tooltip :refer [tooltip]]
+            [reagent-mui.material.use-media-query :refer [use-media-query]]
             [reagent-mui.material.use-scroll-trigger :refer [use-scroll-trigger]]
             [reagent-mui.styles :as styles]
+            [reagent-mui.util :as reagent-mui.util]
             [reagent.core :as r]
             [reitit.frontend.easy :as rfe]))
 
@@ -75,11 +78,9 @@
    (when (util/listen [:landing-page.core/logged-in?])
      [stack {:direction "row" :spacing {:xs 1 :sm 2} :align-items "center"}
       (when-not @sidebar-open?
-        [box (cond-> {:sx {:display {:xs "none" :sm "block"}}}
-               @sidebar-open? (assoc :visibility "hidden"))
-         [icon-button {:on-click #(swap! sidebar-open? not)
-                       :color "inherit"}
-          [icons.menu/menu]]])
+        [icon-button {:on-click #(swap! sidebar-open? not)
+                      :color "inherit"}
+         [menu-icon]])
       [avatar+menu]])
    [tooltip {:title util/company-name}
     [business]]
@@ -96,17 +97,22 @@
   (styles/styled
    app-bar
    {:shouldForwardProp (fn [props] (not= props "sidebarOpen?"))}
-   (fn [{{{:keys [create duration] {:keys [sharp]} :easing} :transitions} :theme :keys [theme sidebar-open?] :as m}]
-     (cond-> {:z-index (inc (get-in theme [:z-index :drawer]))
-              :transition (create (clj->js '("width" "margin"))
-                                  (clj->js {:easing sharp
-                                            :duration (:leaving-screen duration)}))}
-       sidebar-open?
-       (assoc :margin-left drawer-width
-              :width (str "calc(100% - " drawer-width "px)")
-              :transition (create (clj->js '("width" "margin"))
-                                  (clj->js {:easing sharp
-                                            :duration (:entering-screen duration)})))))))
+   (fn [{{{:keys [create duration] {:keys [sharp]} :easing} :transitions
+          :keys [breakpoints]} :theme :keys [theme sidebar-open?]}]
+     (let [drawer-z-index (get-in theme [:z-index :drawer])]
+       {;;; mobile appbar
+        ((breakpoints :only) "xs") {:z-index (dec drawer-z-index) :width "100%"}
+        ;desktop appbar
+        ((breakpoints :not) "xs") (cond-> {:z-index (inc drawer-z-index)
+                                           :transition (create (clj->js '("width" "margin"))
+                                                               (clj->js {:easing sharp
+                                                                         :duration (:leaving-screen duration)}))}
+                                    sidebar-open?
+                                    (assoc :margin-left drawer-width
+                                           :width (str "calc(100% - " drawer-width "px)")
+                                           :transition (create (clj->js '("width" "margin"))
+                                                               (clj->js {:easing sharp
+                                                                         :duration (:entering-screen duration)}))))}))))
 
 (defn- open-drawer-props [{{:keys [create duration] {:keys [sharp]} :easing} :transitions}]
   {:width drawer-width
@@ -115,9 +121,7 @@
 
 (defn- closed-drawer-props [{{:keys [create duration] {:keys [sharp]} :easing} :transitions
                              :keys [spacing breakpoints]}]
-  (prn "break" breakpoints)
-  {:width (str "calc(" (spacing 7) " + 1px)")
-   ((:up breakpoints) "sm") {:width (str "calc(" (spacing 8) " + 1px)")}
+  {:width (str "calc(" (spacing 8) " + 1px)")
    :transition (create "width" (clj->js {:easing sharp :duration (:leaving-screen duration)}))
    :overflow-x "hidden"})
 
@@ -169,37 +173,60 @@
                           :color (if selected?
                                    "textOnLight.main")}}]]])
 
-(defn- drawer-comp [sidebar-open?]
-  (let [list-item' (partial my-list-item sidebar-open?)]
-    [my-drawer {:sidebar-open? @sidebar-open?
-                :variant "permanent"
-                :open @sidebar-open?}
+(defn- drawer-content [list-item' sidebar-open? xs?]
+  (let [on-list-item-click (fn [navigation-kw]
+                             (when xs? (reset! sidebar-open? false))
+                             (rfe/navigate navigation-kw))]
+    [:<>
      [drawer-header
       [icon-button {:color "inherit"
                     :on-click #(swap! sidebar-open? not)} [arrow-back]]]
      ;[divider]
      [list {:sx {:py 0}}
       [list-item' {:icon home
-                   :on-click #(rfe/navigate :route/home)
+                   :on-click #(on-list-item-click :route/home)
                    :selected? (= :route/home (util/listen [:landing-page.core/route-name]))
                    :label (i18n/t :home)}]
       [list-item' {:icon emoji-people
-                   :on-click #(rfe/navigate :route/about-me)
+                   :on-click #(on-list-item-click :route/about-me)
                    :selected? (= :route/about-me (util/listen [:landing-page.core/route-name]))
                    :label (i18n/t :about-me)}]
       [list-item' {:icon pets
-                   :on-click #(rfe/navigate :route/images)
+                   :on-click #(on-list-item-click :route/images)
                    :selected? (= :route/images (util/listen [:landing-page.core/route-name]))
                    :label (i18n/t :pets)}]]
      [divider]
      [list-item' {:icon app-settings-alt
-                  :on-click #(rfe/navigate :route/theme-customization)
+                  :on-click #(on-list-item-click :route/theme-customization)
                   :selected? (= :route/theme-customization (util/listen [:landing-page.core/route-name]))
-                  :label (i18n/t :pets)}]
-     [box {:flex 1 :align-items "flex-end" :display "flex" :pb 2}
+                  :label (i18n/t :configuration)}]
+     [list {:sx {:flex 1 :justify-content "flex-end" :display "flex" :flex-direction "column"}}
+      [list-item' {:icon desktop-mac-outlined
+                   :on-click #(rfe/navigate :landing-page.core/index)
+                   :label (i18n/t :login-page)}]
       [list-item' {:icon logout
                    :on-click #(rfe/navigate :landing-page.core/index)
                    :label (i18n/t :logout)}]]]))
+
+(defn- mobile-drawer [list-item' sidebar-open?]
+  [drawer {:variant "temporary" :open @sidebar-open?}
+   [drawer-content list-item' sidebar-open?]])
+
+(defn- drawer-comp [sidebar-open?]
+  (let [{:keys [sidebar-open?]} (reagent-mui.util/js->clj' sidebar-open?)
+        list-item' (partial my-list-item sidebar-open?)
+        xs? (use-media-query (fn [theme] ((get-in (reagent-mui.util/js->clj' theme) [:breakpoints :only]) "xs")))]
+    (r/as-element
+     [:<>
+      (if xs?
+        [drawer {:variant "temporary"
+                 :open @sidebar-open?
+                 :on-close #(reset! sidebar-open? false)}
+         [drawer-content list-item' sidebar-open? xs?]]
+        [my-drawer {:sidebar-open? @sidebar-open?
+                    :variant "permanent"
+                    :open @sidebar-open?}
+         [drawer-content list-item' sidebar-open? xs?]])])))
 
 (defn- app-bar+sidebar [_scroll-trigger]
   (let [sidebar-open? (r/atom false)]
@@ -214,7 +241,7 @@
        (if-not (util/listen [:landing-page.core/logged-in?])
          [offset {:id "appbar-offset"}]
          [:<>
-          [drawer-comp sidebar-open?]])])))
+          [:> drawer-comp {:sidebar-open? sidebar-open?}]])])))
 
 (defn main []
   (let [scroll-trigger (use-scroll-trigger {:threshold 0})]

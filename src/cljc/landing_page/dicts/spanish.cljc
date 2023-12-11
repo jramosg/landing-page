@@ -26,6 +26,8 @@
    :home "Inicio"
    :about-me "Sobre mi"
    :pets "Perro"
+   :configuration "Configuración"
+   :login-page "Ver landing page"
    :logout "Salir"
 
    :typography "Tipografía"

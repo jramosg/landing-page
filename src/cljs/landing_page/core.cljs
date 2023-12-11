@@ -23,6 +23,7 @@
 (rf/reg-event-db
  ::appdb-add-route-name
  (fn [db [_ route-name]]
+   (prn "n" route-name)
    (assoc-in db [:route :name] route-name)))
 
 (rf/reg-sub
@@ -34,7 +35,8 @@
  ::logged-in?
  :<- [::route-name]
  (fn [route-name]
-   (not (contains? #{::index :create-account} route-name))))
+   (prn "r  " route-name)
+   (not (contains? #{::index :route/create-account} route-name))))
 
 (defonce match (r/atom nil))
 
@@ -79,18 +81,15 @@
 (def routes
   (reitit/router
    ["/"
-    [""
+    ["landing"
      {:name ::index
       :view landing/main
-      :controllers [{:start (log-fn "start" "frontpage controller")
-                     :stop (log-fn "stop" "frontpage controller")}]}]
+      :controllers [{:start (log-fn "start" "landing controller")
+                     :stop (log-fn "stop" "landing controller")}]}]
     ["create-account" {:name :route/create-account
-                       :view create-account.view/main
-                       :controllers [{:start (log-fn "start" "create-account")
-                                      :stop (log-fn "stop" "create-account")}]}]
-    ["home" {:name :route/home
-             :view home/main
-             :controllers [{:start (prn "home!")}]}]
+                       :view create-account.view/main}]
+    ["" {:name :route/home
+         :view home/main}]
     ["about-me" {:name :route/about-me
                  :view (fn []
                          [box
