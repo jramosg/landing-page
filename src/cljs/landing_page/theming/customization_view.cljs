@@ -58,9 +58,9 @@
     (doall (for [v constants/font-family-opts]
              [menu-item {:value v
                          :key v}
-              [typography {:font-family v} (if (= v "Fashion Fetish")
-                                             (i18n/t :nereas-fav)
-                                             v)]]))]])
+              [typography {:font-family v} v #_(if (= v "Fashion Fetish")
+                                                 (i18n/t :nereas-fav)
+                                                 v)]]))]])
 
 (defn- font-customization []
   [my-paper

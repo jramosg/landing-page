@@ -26,6 +26,7 @@
    :home "Inicio"
    :about-me "Sobre mi"
    :pets "Perro"
+   :shop "Tienda"
    :configuration "Configuración"
    :login-page "Ver landing page"
    :logout "Salir"

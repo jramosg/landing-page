@@ -13,10 +13,10 @@
             [reagent-mui.icons.menu :refer [menu] :rename {menu menu-icon}]
             [reagent-mui.icons.notifications-outlined :refer [notifications-outlined]]
             [reagent-mui.icons.pets :refer [pets]]
+            [reagent-mui.icons.store :refer [store]]
             [reagent-mui.material.app-bar :refer [app-bar]]
             [reagent-mui.material.avatar :refer [avatar]]
             [reagent-mui.material.badge :refer [badge]]
-            [reagent-mui.material.box :refer [box]]
             [reagent-mui.material.divider :refer [divider]]
             [reagent-mui.material.drawer :refer [drawer]]
             [reagent-mui.material.icon-button :refer [icon-button]]
@@ -191,16 +191,21 @@
                    :on-click #(on-list-item-click :route/about-me)
                    :selected? (= :route/about-me (util/listen [:landing-page.core/route-name]))
                    :label (i18n/t :about-me)}]
-      [list-item' {:icon pets
+      #_[list-item' {:icon pets
                    :on-click #(on-list-item-click :route/images)
                    :selected? (= :route/images (util/listen [:landing-page.core/route-name]))
-                   :label (i18n/t :pets)}]]
+                   :label (i18n/t :pets)}]
+      [list-item' {:icon store
+                   :on-click #(on-list-item-click :route/shop)
+                   :selected? (= :route/shop (util/listen [:landing-page.core/route-name]))
+                   :label (i18n/t :shop)}]]
      [divider]
      [list-item' {:icon app-settings-alt
                   :on-click #(on-list-item-click :route/theme-customization)
                   :selected? (= :route/theme-customization (util/listen [:landing-page.core/route-name]))
                   :label (i18n/t :configuration)}]
      [list {:sx {:flex 1 :justify-content "flex-end" :display "flex" :flex-direction "column"}}
+      [divider]
       [list-item' {:icon desktop-mac-outlined
                    :on-click #(rfe/navigate :landing-page.core/index)
                    :label (i18n/t :login-page)}]

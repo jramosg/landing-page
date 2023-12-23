@@ -25,6 +25,7 @@
    :home "Hasiera"
    :about-me "Niri buruz"
    :pets "Txakurra"
+   :shop "Denda"
    :configuration "Ezarpenak"
    :login-page "Landing page ikusi"
    :logout "Irten"

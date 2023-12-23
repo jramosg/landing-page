@@ -30,6 +30,7 @@
    :pets "Dog"
    :configuration "Configuration"
    :login-page "See landing page"
+   :shop "Shop"
    :logout "Log out"
 
    :typography "Typography"
