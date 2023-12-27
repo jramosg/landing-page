@@ -37,7 +37,7 @@
 
 (defn- font-size-selector []
   [:div
-   [typography {:variant "subtitle1"} (i18n/t :size)]
+   [typography {:variant "subtitle1"} (i18n/t :font-size)]
    [box {:p 2}
     [slider {:on-change (fn [_ e] (util/>evt [::events/change-font-size e]))
              :value (util/listen [::subs/font-size])

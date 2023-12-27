@@ -120,7 +120,7 @@
    :overflow-x "hidden"})
 
 (defn- closed-drawer-props [{{:keys [create duration] {:keys [sharp]} :easing} :transitions
-                             :keys [spacing breakpoints]}]
+                             :keys [spacing]}]
   {:width (str "calc(" (spacing 8) " + 1px)")
    :transition (create "width" (clj->js {:easing sharp :duration (:leaving-screen duration)}))
    :overflow-x "hidden"})
@@ -192,9 +192,9 @@
                    :selected? (= :route/about-me (util/listen [:landing-page.core/route-name]))
                    :label (i18n/t :about-me)}]
       #_[list-item' {:icon pets
-                   :on-click #(on-list-item-click :route/images)
-                   :selected? (= :route/images (util/listen [:landing-page.core/route-name]))
-                   :label (i18n/t :pets)}]
+                     :on-click #(on-list-item-click :route/images)
+                     :selected? (= :route/images (util/listen [:landing-page.core/route-name]))
+                     :label (i18n/t :pets)}]
       [list-item' {:icon store
                    :on-click #(on-list-item-click :route/shop)
                    :selected? (= :route/shop (util/listen [:landing-page.core/route-name]))

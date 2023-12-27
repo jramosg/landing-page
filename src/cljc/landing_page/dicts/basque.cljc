@@ -31,7 +31,7 @@
    :logout "Irten"
 
    :typography "Tipografia"
-   :size "Tamaina"
+   :font-size "Tamaina"
    :font-family "Letra mota"
    :nereas-fav "Nerean gustokoena"
    :text-view-desc "Konfigurazio hau aukeratuta, textu arruntak itxura hau du"
@@ -41,4 +41,7 @@
    :color-examples "Kolore argi, nagusi eta ilunen eredua"
 
    :my-profile "Nire profila"
-   :notifications "Jakinarazpenak"})
+   :notifications "Jakinarazpenak"
+
+   :filter "Filtratu"
+   :size "Neurria"})

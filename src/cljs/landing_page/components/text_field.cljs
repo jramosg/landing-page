@@ -40,7 +40,6 @@
         state (r/atom (cond-> {}
                         pwd? (assoc :pwd-visible? false)))]
     (fn [props]
-      (prn "Je" validation-error-msg)
       (let [{:keys [callback-fn] :as props} (cond-> props
                                               form-props (merge (get-form-props form-props)))]
         [text-field

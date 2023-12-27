@@ -34,7 +34,7 @@
    :logout "Log out"
 
    :typography "Typography"
-   :size "Size"
+   :font-size "Size"
    :font-family "Font type"
    :nereas-fav "Nerea's favourite"
    :text-view-desc "With this settings, ordinary text looks like this"
@@ -44,4 +44,7 @@
    :color-examples "Sample for light/primary/dark colors"
 
    :my-profile "My profile"
-   :notifications "Notifications"})
+   :notifications "Notifications"
+
+   :filter "Filter"
+   :size "Size"})

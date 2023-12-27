@@ -1,5 +1,6 @@
 (ns landing-page.core
   (:require [landing-page.app-bar :as app-bar]
+            [landing-page.components.modals :as modals]
             [landing-page.context.i18n :as i18n]
             [landing-page.create-account.view :as create-account.view]
             [landing-page.home.view :as home]
@@ -23,7 +24,6 @@
 (rf/reg-event-db
  ::appdb-add-route-name
  (fn [db [_ route-name]]
-   (prn "n" route-name)
    (assoc-in db [:route :name] route-name)))
 
 (rf/reg-sub
@@ -35,7 +35,6 @@
  ::logged-in?
  :<- [::route-name]
  (fn [route-name]
-   (prn "r  " route-name)
    (not (contains? #{::index :route/create-account} route-name))))
 
 (defonce match (r/atom nil))
@@ -59,6 +58,7 @@
    [styles/theme-provider (theme-provider/main)
     [css-baseline {:enable-color-scheme true}]
     [loading/main]
+    [modals/modal-comp]
     (if (util/listen [::logged-in?])
       [box {:height 1
             :display "flex"}

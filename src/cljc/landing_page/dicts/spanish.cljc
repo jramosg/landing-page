@@ -32,7 +32,7 @@
    :logout "Salir"
 
    :typography "Tipografía"
-   :size "Tamaño"
+   :font-size "Tamaño"
    :font-family "Tipo de Fuente"
    :nereas-fav "Favorito de Nerea"
    :text-view-desc "Seleccionando esta configuración, el texto corriente tiene esta apariencia"
@@ -42,4 +42,7 @@
    :color-examples "Muestra de los colores claro/principal/oscuro"
 
    :my-profile "Mi perfil"
-   :notifications "Notificacines"})
+   :notifications "Notificacines"
+
+   :filter "Filtrar"
+   :size "Talla"})
