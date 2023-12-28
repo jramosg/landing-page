@@ -44,5 +44,11 @@
    :notifications "Jakinarazpenak"
 
    :filter "Filtratu"
+   :sort-by "Ordenatzeko irizpidea"
    :size "Neurria"
-   :close-modal "Itxi"})
+   :close-modal "Itxi"
+
+   :newest "Berrienak"
+   :price-high-low "Prezioa: Handiena-Txikiena"
+   :price-low-high "Prezioa: Txikiena-Handiena"
+   :discount "Beherapena"})

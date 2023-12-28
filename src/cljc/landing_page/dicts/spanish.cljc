@@ -45,5 +45,11 @@
    :notifications "Notificacines"
 
    :filter "Filtrar"
+   :sort-by "Ordenar por"
    :size "Talla"
-   :close-modal "Cerrar"})
+   :close-modal "Cerrar"
+
+   :newest "Más nuevos"
+   :price-high-low "Precio: Mayor-Menor"
+   :price-low-high "Precio: Menor-Mayor"
+   :discount "Descuento"})

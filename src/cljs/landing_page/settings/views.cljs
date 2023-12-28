@@ -1,5 +1,6 @@
 (ns landing-page.settings.views
-  (:require [landing-page.context.i18n :as i18n]
+  (:require [landing-page.components.menu-item :refer [menu-item]]
+            [landing-page.context.i18n :as i18n]
             [landing-page.settings.events :as events]
             [landing-page.settings.subs :as subs]
             [landing-page.theming.events :as theming.events]
@@ -11,7 +12,6 @@
             [reagent-mui.icons.light-mode :refer [light-mode]]
             [reagent-mui.material.icon-button :refer [icon-button]]
             [reagent-mui.material.menu :refer [menu]]
-            [reagent-mui.material.menu-item :refer [menu-item]]
             [reagent-mui.material.stack :refer [stack]]
             [reagent-mui.material.switch :refer [switch]]
             [reagent-mui.material.tooltip :refer [tooltip]]
@@ -56,13 +56,14 @@
                 :on-close close!
                 :anchor-origin {:vertical "bottom" :horizontal "right"}
                 :transform-origin {:vertical "top" :horizontal "right"}}
-          (for [{:keys [label value]} languages]
-            [menu-item {:on-click (fn []
-                                    (on-language-select value)
-                                    (close!))
-                        :selected (= value prefered-language)
-                        :key (name value)
-                        :sx {"&.Mui-selected" {:background-color "primary.light"
-                                               "&:hover" {:background-color "primary.light"}
-                                               :color "textOnLight.main"}}}
-             label])]]))))
+          (doall
+           (for [{:keys [label value]} languages]
+             [menu-item {:on-click (fn []
+                                     (on-language-select value)
+                                     (close!))
+                         :selected (= value prefered-language)
+                         :key (name value)
+                         :sx {"&.Mui-selected" {:background-color "primary.light"
+                                                "&:hover" {:background-color "primary.light"}
+                                                :color "textOnLight.main"}}}
+              label]))]]))))

@@ -16,3 +16,8 @@
  ::delete-size
  (fn [db [_ v]]
    (update-in db constants/filter-size-path disj v)))
+
+(rf/reg-event-db
+ ::add-sort-by
+ (fn [db [_ v]]
+   (assoc-in db constants/sort-by-path v)))

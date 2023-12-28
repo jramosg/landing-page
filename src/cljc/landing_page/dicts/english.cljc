@@ -47,5 +47,11 @@
    :notifications "Notifications"
 
    :filter "Filter"
+   :sort-by "Sort by"
    :size "Size"
-   :close-modal "Close"})
+   :close-modal "Close"
+
+   :newest "Newest"
+   :price-high-low "Price: High-Low"
+   :price-low-high "Price: Low-High"
+   :discount "Discount"})

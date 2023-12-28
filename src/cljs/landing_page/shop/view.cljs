@@ -1,5 +1,6 @@
 (ns landing-page.shop.view
-  (:require [landing-page.components.modals :as modals]
+  (:require [landing-page.components.menu-item :refer [menu-item]]
+            [landing-page.components.modals :as modals]
             [landing-page.components.text-field :refer [my-text-field]]
             [landing-page.context.i18n :as i18n]
             [landing-page.shop.events :as events]
@@ -17,6 +18,7 @@
             [reagent-mui.material.box :refer [box]]
             [reagent-mui.material.button :refer [button]]
             [reagent-mui.material.card :refer [card]]
+            [reagent-mui.material.card-action-area :refer [card-action-area]]
             [reagent-mui.material.card-actions :refer [card-actions]]
             [reagent-mui.material.card-content :refer [card-content]]
             [reagent-mui.material.card-media :refer [card-media]]
@@ -24,6 +26,7 @@
             [reagent-mui.material.container :refer [container]]
             [reagent-mui.material.grow :refer [grow]]
             [reagent-mui.material.icon-button :refer [icon-button]]
+            [reagent-mui.material.menu :refer [menu]]
             [reagent-mui.material.paper :refer [paper]]
             [reagent-mui.material.stack :refer [stack]]
             [reagent-mui.material.toggle-button :refer [toggle-button]]
@@ -83,14 +86,13 @@
     (fn [images]
       [card {:sx {:p 2 :max-width "400px"}
              :elevation 10}
-       [card-media
-        (doall
-         (for [image images]
-           [img-box {:key image
-                     :display (if (= image @active-img-atm) "block" "none")}
-            [grow {:in (= image @active-img-atm) :timeout 1000}
-             [styled-img {:src image}]]
-            [image-toogle-btns images active-img-atm]]))]
+       (doall
+        (for [image images]
+          [img-box {:key image
+                    :display (if (= image @active-img-atm) "block" "none")}
+           [grow {:in (= image @active-img-atm) :timeout 1000}
+            [card-action-area [card-media {:component "img" :image image}]]]
+           [image-toogle-btns images active-img-atm]]))
        [stack {:direction "row" :justify-content "space-between"}
         [card-content
          [:div "X €"]]
@@ -108,16 +110,38 @@
   [button {:start-icon (r/as-element
                         [filter-list])
            :variant "outlined"
-           :on-click #(util/>evt [::modals/open filter-modal/props])}
+           :on-click #(util/>evt [::modals/open (filter-modal/props)])}
    [badge {:badge-content (util/listen [::subs/filter-count])
            :show-zero false
            :color "secondary"}
     (i18n/t :filter)]])
 
 (defn- sort-by-btn []
-  [button {:start-icon (r/as-element [import-export])
-           :variant "outlined"}
-   "Ordenar por"])
+  (let [anchor-element (r/atom nil)
+        close! (fn [] (reset! anchor-element nil))]
+    (fn []
+      (let [selected (util/listen [::subs/sort-by])]
+        (prn "ee" selected)
+        [:<>
+         [button {:start-icon (r/as-element [import-export])
+                  :variant "outlined"
+                  :on-click #(reset! anchor-element (.-target %))}
+          (str (i18n/t :sort-by)
+               (when selected (str ": " (i18n/t selected))))]
+         [menu {:id "language-selector-menu"
+                :anchor-el @anchor-element
+                :open (boolean @anchor-element)
+                :on-close close!
+                :anchor-origin {:vertical "bottom" :horizontal "right"}
+                :transform-origin {:vertical "top" :horizontal "right"}}
+          (doall
+           (for [kw [:newest :price-high-low :price-low-high :discount]]
+             [menu-item {:on-click (fn []
+                                     (util/>evt [::events/add-sort-by kw])
+                                     (close!))
+                         :selected (= selected kw)
+                         :key kw}
+              (i18n/t kw)]))]]))))
 
 (defn- shop-header []
   [stack {:direction "row" :justify-content "space-between" :spacing 1 :align-items "center"}
@@ -155,6 +179,7 @@
       (for [size sizes]
         [chip {:key size :label size
                :on-delete #(util/>evt [::events/delete-size size])}]))]))
+
 (defn- show-filters []
   [stack {:direction "row" :spacing 2 :align-items "center" :flex-wrap "wrap" :use-flex-gap true}
    [colors-filters]

@@ -8,6 +8,11 @@
    (get-in db constants/filters-path)))
 
 (rf/reg-sub
+ ::sort-by
+ (fn [db]
+   (get-in db constants/sort-by-path)))
+
+(rf/reg-sub
  ::filter-count
  :<- [::filters]
  (fn [filters]
