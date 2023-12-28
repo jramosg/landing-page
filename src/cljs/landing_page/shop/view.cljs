@@ -91,7 +91,7 @@
           [img-box {:key image
                     :display (if (= image @active-img-atm) "block" "none")}
            [grow {:in (= image @active-img-atm) :timeout 1000}
-            [card-action-area [card-media {:component "img" :image image}]]]
+            [card-action-area [card-media {:component "img" :image image :alt "Shop item"}]]]
            [image-toogle-btns images active-img-atm]]))
        [stack {:direction "row" :justify-content "space-between"}
         [card-content
