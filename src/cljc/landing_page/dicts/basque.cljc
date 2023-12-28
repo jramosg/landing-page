@@ -44,4 +44,5 @@
    :notifications "Jakinarazpenak"
 
    :filter "Filtratu"
-   :size "Neurria"})
+   :size "Neurria"
+   :close-modal "Itxi"})

@@ -1,9 +1,17 @@
 (ns landing-page.shop.filter-modal
-  (:require [landing-page.context.i18n :as i18n]
+  (:require [landing-page.components.modals :as modals]
+            [landing-page.context.i18n :as i18n]
+            [landing-page.shop.constants :as constants]
+            [landing-page.shop.events :as events]
+            [landing-page.shop.subs :as subs]
+            [landing-page.util :as util]
             [reagent-mui.colors :as colors]
             [reagent-mui.icons.check :refer [check]]
             [reagent-mui.material.box :refer [box]]
             [reagent-mui.material.button :refer [button]]
+            [reagent-mui.material.chip :refer [chip]]
+            [reagent-mui.material.dialog-actions :refer [dialog-actions]]
+            [reagent-mui.material.dialog-content :refer [dialog-content]]
             [reagent-mui.material.divider :refer [divider]]
             [reagent-mui.material.stack :refer [stack]]
             [reagent-mui.material.typography :refer [typography]]
@@ -55,7 +63,7 @@
    (i18n/t :color)
    [color-size-grid
     (doall
-     (for [color [colors/green colors/red colors/blue colors/grey {500 "#000"} {500 "#fff"} colors/orange]
+     (for [color [colors/green colors/red colors/blue colors/yellow colors/grey {500 "#000"} {500 "#fff"} colors/orange]
            :let [color (color 500)
                  selected? ((:colors @state) color)]]
        [styled-button {:key color
@@ -77,15 +85,26 @@
         size]))]])
 
 (defn- modal-content []
-  (let [state (r/atom {:sizes #{}
-                       :colors #{}})]
+  (let [state (r/atom (or (util/listen [::subs/filters])
+                          {constants/sizes-kw #{}
+                           constants/colors-kw #{}}))]
     (fn []
-      [stack {:spacing 2}
-       [color-selector state]
-       [divider]
-       [size-selector state]])))
+      [:<>
+       [dialog-content
+        [stack {:spacing 2}
+         [color-selector state]
+         [divider]
+         [size-selector state]]]
+       [dialog-actions {:sx {:justify-content "center"}}
+        [button {:variant "outlined"
+                 :on-click #(util/>evt [::modals/kill])}
+         (i18n/t :close-modal)]
+        [button {:variant "contained"
+                 :on-click #(util/dispatch-n [[::modals/kill]
+                                              [::events/apply-filters @state]])}
+         (i18n/t :filter)]]])))
 
 (def props
   {:modal-type "drawer"
    :dialog-title (i18n/t :filter)
-   :content-render-fn modal-content})
+   :dialog-content+actions-render-fn modal-content})

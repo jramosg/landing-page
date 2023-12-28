@@ -3,6 +3,7 @@
             [re-frame.core :as rf]
             [reagent-mui.icons.close :refer [close]]
             [reagent-mui.material.dialog :refer [dialog]]
+            [reagent-mui.material.dialog-actions :refer [dialog-actions]]
             [reagent-mui.material.dialog-content :refer [dialog-content]]
             [reagent-mui.material.dialog-title :refer [dialog-title] :rename {dialog-title mui-dialog-title}]
             [reagent-mui.material.drawer :refer [drawer]]
@@ -12,7 +13,7 @@
 
 (rf/reg-event-db
  ::open
- (fn [db [_ {:keys [modal-type modal-props dialog-actions content-render-fn dialog-title dialog-title-render-fn] :as modal}]]
+ (fn [db [_ {:keys [_modal-type _modal-props _content-render-fn _dialog-title _dialog-title-render-fn _dialog-actions-render-fn] :as modal}]]
    (assoc db :modal modal)))
 
 (rf/reg-event-db
@@ -38,7 +39,7 @@
                             :width "400px"}})))
 
 (defn- drawer-comp []
-  (let [{:keys [modal-type modal-props content-render-fn] :as modal}
+  (let [{:keys [modal-type modal-props dialog-content+actions-render-fn] :as modal}
         (util/listen [::modal])]
     [drawer-as-modal
      (merge (merge {:open (= modal-type "drawer")
@@ -49,9 +50,8 @@
      [stack {:direction "row" :spacing 1 :justify-content "space-between" :align-items "center"}
       [dialog-title-comp modal]
       [icon-button {:on-click #(util/>evt [::kill])} [close]]]
-
-     (when content-render-fn
-       [dialog-content {:sx {:px 0}} [content-render-fn]])]))
+     (when dialog-content+actions-render-fn
+       [dialog-content+actions-render-fn])]))
 
 (defn modal-comp []
   [drawer-comp])

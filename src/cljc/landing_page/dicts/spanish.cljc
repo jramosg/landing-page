@@ -45,4 +45,5 @@
    :notifications "Notificacines"
 
    :filter "Filtrar"
-   :size "Talla"})
+   :size "Talla"
+   :close-modal "Cerrar"})

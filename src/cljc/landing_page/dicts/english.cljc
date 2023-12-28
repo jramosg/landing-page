@@ -47,4 +47,5 @@
    :notifications "Notifications"
 
    :filter "Filter"
-   :size "Size"})
+   :size "Size"
+   :close-modal "Close"})

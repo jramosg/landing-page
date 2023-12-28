@@ -2,7 +2,9 @@
   (:require [landing-page.components.modals :as modals]
             [landing-page.components.text-field :refer [my-text-field]]
             [landing-page.context.i18n :as i18n]
+            [landing-page.shop.events :as events]
             [landing-page.shop.filter-modal :as filter-modal]
+            [landing-page.shop.subs :as subs]
             [landing-page.util :as util]
             [goog.string :as gs]
             [reagent-mui.icons.add :refer [add]]
@@ -11,15 +13,18 @@
             [reagent-mui.icons.filter-list :refer [filter-list]]
             [reagent-mui.icons.import-export :refer [import-export]]
             [reagent-mui.icons.search :refer [search] :rename {search search-icon}]
+            [reagent-mui.material.badge :refer [badge]]
             [reagent-mui.material.box :refer [box]]
             [reagent-mui.material.button :refer [button]]
             [reagent-mui.material.card :refer [card]]
             [reagent-mui.material.card-actions :refer [card-actions]]
             [reagent-mui.material.card-content :refer [card-content]]
             [reagent-mui.material.card-media :refer [card-media]]
+            [reagent-mui.material.chip :refer [chip]]
             [reagent-mui.material.container :refer [container]]
             [reagent-mui.material.grow :refer [grow]]
             [reagent-mui.material.icon-button :refer [icon-button]]
+            [reagent-mui.material.paper :refer [paper]]
             [reagent-mui.material.stack :refer [stack]]
             [reagent-mui.material.toggle-button :refer [toggle-button]]
             [reagent-mui.material.toggle-button-group :refer [toggle-button-group]]
@@ -82,7 +87,6 @@
         (doall
          (for [image images]
            [img-box {:key image
-                     :height 1 :width 1
                      :display (if (= image @active-img-atm) "block" "none")}
             [grow {:in (= image @active-img-atm) :timeout 1000}
              [styled-img {:src image}]]
@@ -100,10 +104,15 @@
                   :full-width false}])
 
 (defn- filter-btn []
-  [button {:start-icon (r/as-element [filter-list])
+
+  [button {:start-icon (r/as-element
+                        [filter-list])
            :variant "outlined"
            :on-click #(util/>evt [::modals/open filter-modal/props])}
-   (i18n/t :filter)])
+   [badge {:badge-content (util/listen [::subs/filter-count])
+           :show-zero false
+           :color "secondary"}
+    (i18n/t :filter)]])
 
 (defn- sort-by-btn []
   [button {:start-icon (r/as-element [import-export])
@@ -117,11 +126,46 @@
     [filter-btn]
     [sort-by-btn]]])
 
+(defn- show-filters-container [title items]
+  [paper {:sx {:width "fit-content"
+               :px 0.5 :py 1}
+          :variant "outlined"}
+   [stack {:direction "row" :spacing 1 :align-items "center" :flex-wrap "wrap" :use-flex-gap true}
+    [typography {:variant "subtitle2"} (str title ": ")]
+    items]])
+
+(defn- colors-filters []
+  (when-let [colors (seq (util/listen [::subs/sorted-colors]))]
+
+    [show-filters-container
+     (i18n/t :color)
+     (doall
+      (for [color colors]
+        [chip {:key color :label (r/as-element [box {:width "20px"
+                                                     :height "20px"
+                                                     :border-radius "20px"
+                                                     :bgcolor color}])
+               :on-delete #(util/>evt [::events/delete-color color])}]))]))
+
+(defn- size-filters []
+  (when-let [sizes (seq (util/listen [::subs/sorted-sizes]))]
+    [show-filters-container
+     (i18n/t :size)
+     (doall
+      (for [size sizes]
+        [chip {:key size :label size
+               :on-delete #(util/>evt [::events/delete-size size])}]))]))
+(defn- show-filters []
+  [stack {:direction "row" :spacing 2 :align-items "center" :flex-wrap "wrap" :use-flex-gap true}
+   [colors-filters]
+   [size-filters]])
+
 (defn main []
   [container {:max-width "xl" :sx {:padding-top 2 :padding-bottom 2}}
    [stack {:direction "column" :spacing 2}
     [typography {:variant "h4"} (i18n/t :shop)]
     [shop-header]
+    [show-filters]
     [box {:sx {:display "grid"
                :mt 2
                :grid-template-columns {:xs "auto" :sm "repeat(2, auto)" :md "repeat(3, auto)" :lg "repeat(4, auto)" :xl "repeat(5, auto)"}
