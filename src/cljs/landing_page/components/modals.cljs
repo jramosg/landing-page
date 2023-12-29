@@ -47,7 +47,7 @@
                     :variant "temporary"
                     :on-close #(util/>evt [::kill])}
                    modal-props))
-     [stack {:direction "row" :spacing 1 :justify-content "space-between" :align-items "center"}
+     [stack {:direction "row" :spacing 1 :justify-content "space-between" :align-items "center" :mx 1}
       [dialog-title-comp modal]
       [icon-button {:on-click #(util/>evt [::kill])} [close]]]
      (when dialog-content+actions-render-fn

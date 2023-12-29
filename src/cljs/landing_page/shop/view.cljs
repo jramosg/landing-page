@@ -132,8 +132,8 @@
          [button {:start-icon (r/as-element [import-export])
                   :variant "outlined"
                   :on-click #(reset! anchor-element (.-target %))}
-          (str (i18n/t :sort-by)
-               (when selected (str ": " (i18n/t selected))))]
+          (if selected (i18n/t selected)
+                       (i18n/t :sort-by))]
          [menu {:id "language-selector-menu"
                 :anchor-el @anchor-element
                 :open (boolean @anchor-element)
@@ -152,7 +152,7 @@
 (defn- shop-header []
   [stack {:direction "row" :justify-content "space-between" :spacing 1 :align-items "center"}
    [search-bar]
-   [stack {:direction "row" :spacing 1}
+   [stack {:direction "row" :spacing 1 :align-items "center"}
     [filter-btn]
     [sort-by-btn]]])
 
