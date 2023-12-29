@@ -148,30 +148,32 @@
              :justify-content "flex-end"}
             (get-in theme [:mixins :toolbar])))))
 
+(def ^:private list-item-sx
+  {:px 0
+   :py 0
+   :border-left "8px solid"
+   :border-color "transparent"
+   "&.MuiListItem-root.Mui-selected" {:border-left "8px solid"
+                                      :border-color "primary.main"}})
+
 (defn- my-list-item [sidebar-open? {:keys [icon label selected? on-click]}]
-  [list-item {:sx {:px 0
-                   :py 0
-                   "&.Mui-selected" {:background-color "primary.light"
-                                     "&:hover" {:background-color "primary.light"}}}
+  [list-item {:sx list-item-sx
               :selected selected?
               :on-click on-click}
    [list-item-button
     {:sx {:min-height 48
-          ;:bgcolor (when selected? "primary.light")
+
           :justify-content (if @sidebar-open? "initial" "center")
           :px 2.5}}
     [list-item-icon
      {:sx {:min-width 0
+           :color "inherit"
            :mr (if @sidebar-open? 3 "auto")
-           :justify-content "center"
-           :color (if selected?
-                    "textOnLight.main")}}
+           :justify-content "center"}}
      [icon]]
     [list-item-text {:primary label
                      :sx {:opacity (if @sidebar-open? 1 0)
-                          :white-space "nowrap"
-                          :color (if selected?
-                                   "textOnLight.main")}}]]])
+                          :white-space "nowrap"}}]]])
 
 (defn- drawer-content [list-item' sidebar-open? xs?]
   (let [on-list-item-click (fn [navigation-kw]

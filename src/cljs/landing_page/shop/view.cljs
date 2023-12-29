@@ -1,6 +1,5 @@
 (ns landing-page.shop.view
-  (:require [landing-page.components.menu-item :refer [menu-item]]
-            [landing-page.components.modals :as modals]
+  (:require [landing-page.components.modals :as modals]
             [landing-page.components.text-field :refer [my-text-field]]
             [landing-page.context.i18n :as i18n]
             [landing-page.shop.events :as events]
@@ -27,6 +26,7 @@
             [reagent-mui.material.grow :refer [grow]]
             [reagent-mui.material.icon-button :refer [icon-button]]
             [reagent-mui.material.menu :refer [menu]]
+            [reagent-mui.material.menu-item :refer [menu-item]]
             [reagent-mui.material.paper :refer [paper]]
             [reagent-mui.material.stack :refer [stack]]
             [reagent-mui.material.toggle-button :refer [toggle-button]]
@@ -34,7 +34,8 @@
             [reagent-mui.material.typography :refer [typography]]
             [reagent-mui.styles :as styles]
             [reagent-mui.util :as mui.util]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            [reitit.frontend.easy :as rfe]))
 
 (def ^:private photo-url "https://api-prod-minimal-v510.vercel.app/assets/images/m_product/product_%s.jpg")
 

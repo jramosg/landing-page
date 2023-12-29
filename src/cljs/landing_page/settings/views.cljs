@@ -1,6 +1,5 @@
 (ns landing-page.settings.views
-  (:require [landing-page.components.menu-item :refer [menu-item]]
-            [landing-page.context.i18n :as i18n]
+  (:require [landing-page.context.i18n :as i18n]
             [landing-page.settings.events :as events]
             [landing-page.settings.subs :as subs]
             [landing-page.theming.events :as theming.events]
@@ -12,6 +11,7 @@
             [reagent-mui.icons.light-mode :refer [light-mode]]
             [reagent-mui.material.icon-button :refer [icon-button]]
             [reagent-mui.material.menu :refer [menu]]
+            [reagent-mui.material.menu-item :refer [menu-item]]
             [reagent-mui.material.stack :refer [stack]]
             [reagent-mui.material.switch :refer [switch]]
             [reagent-mui.material.tooltip :refer [tooltip]]
