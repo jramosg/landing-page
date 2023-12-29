@@ -88,7 +88,7 @@
     [settings.views/language-selector-icon-btn]
     [settings.views/theme-mode-switch]]])
 
-(def ^:private offset
+(def offset
   (styles/styled "div"
                  (fn [{:keys [theme]}]
                    (get-in theme [:mixins :toolbar]))))

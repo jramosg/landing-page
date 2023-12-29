@@ -104,7 +104,7 @@
                                               [::events/apply-filters @state]])}
          (i18n/t :filter)]]])))
 
-(defn- props []
+(defn props []
   {:modal-type "drawer"
    :dialog-title (i18n/t :filter)
    :dialog-content+actions-render-fn modal-content})
