@@ -52,4 +52,6 @@
    :newest "Más nuevos"
    :price-high-low "Precio: Mayor-Menor"
    :price-low-high "Precio: Menor-Mayor"
-   :discount "Descuento"})
+   :discount "Descuento"
+
+   :find "Buscar"})

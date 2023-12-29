@@ -83,7 +83,9 @@
    ":hover" {:background-color "primary.dark"}})
 
 (defn- image-card [[img0 :as _images]]
-  (let [active-img-atm (r/atom img0)]
+  (let [active-img-atm (r/atom img0)
+        id (str (random-uuid))
+        to-item #(rfe/push-state :route/shop-item nil {:item (str (random-uuid))})]
     (fn [images]
       [card {:sx {:p 2 :max-width "400px"}
              :elevation 10}
@@ -92,22 +94,25 @@
           [img-box {:key image
                     :display (if (= image @active-img-atm) "block" "none")}
            [grow {:in (= image @active-img-atm) :timeout 1000}
-            [card-action-area [card-media {:component "img" :image image :alt "Shop item"}]]]
+            [card-action-area
+             {:on-click to-item}
+             [card-media {:component "img" :image image :alt "Shop item"}]]]
            [image-toogle-btns images active-img-atm]]))
        [stack {:direction "row" :justify-content "space-between"}
         [card-content
+         [typography {:variant "h6"} "lorem"]
          [:div "X €"]]
         [card-actions
-         [icon-button {:sx add-sx}
+         [icon-button {:sx add-sx
+                       :on-click to-item}
           [add]]]]])))
 
 (defn- search-bar []
   [my-text-field {:InputProps {:start-adornment (r/as-element [search-icon {:color "primary"}])}
-                  :label "Buscar"
+                  :label (i18n/t :find)
                   :full-width false}])
 
 (defn- filter-btn []
-
   [button {:start-icon (r/as-element
                         [filter-list])
            :variant "outlined"
@@ -122,7 +127,6 @@
         close! (fn [] (reset! anchor-element nil))]
     (fn []
       (let [selected (util/listen [::subs/sort-by])]
-        (prn "ee" selected)
         [:<>
          [button {:start-icon (r/as-element [import-export])
                   :variant "outlined"
@@ -189,7 +193,7 @@
 (defn main []
   [container {:max-width "xl" :sx {:padding-top 2 :padding-bottom 2}}
    [stack {:direction "column" :spacing 2}
-    [typography {:variant "h4"} (i18n/t :shop)]
+    [typography {:variant "h3"} (i18n/t :shop)]
     [shop-header]
     [show-filters]
     [box {:sx {:display "grid"

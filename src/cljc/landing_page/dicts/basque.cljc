@@ -51,4 +51,6 @@
    :newest "Berrienak"
    :price-high-low "Prezioa: Handiena-Txikiena"
    :price-low-high "Prezioa: Txikiena-Handiena"
-   :discount "Beherapena"})
+   :discount "Beherapena"
+
+   :find "Bilatu"})

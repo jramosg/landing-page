@@ -54,4 +54,6 @@
    :newest "Newest"
    :price-high-low "Price: High-Low"
    :price-low-high "Price: Low-High"
-   :discount "Discount"})
+   :discount "Discount"
+
+   :find "Find"})
