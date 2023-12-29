@@ -7,6 +7,7 @@
             [landing-page.shop.subs :as subs]
             [landing-page.util :as util]
             [goog.string :as gs]
+            goog.string.format
             [reagent-mui.icons.add :refer [add]]
             [reagent-mui.icons.fiber-manual-record :refer [fiber-manual-record]]
             [reagent-mui.icons.fiber-manual-record-outlined :refer [fiber-manual-record-outlined]]
