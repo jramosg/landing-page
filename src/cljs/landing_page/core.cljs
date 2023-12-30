@@ -7,6 +7,7 @@
             [landing-page.image-list.view :as image-list]
             [landing-page.landing.view :as landing]
             [landing-page.loading :as loading]
+            [landing-page.shop.shop-item.view :as shop-item.view]
             [landing-page.shop.view :as shop.view]
             [landing-page.theming.customization-view :as customization-view]
             [landing-page.theming.theme-provider :as theme-provider]
@@ -19,8 +20,7 @@
             [reagent.dom :as rdom]
             [reitit.frontend :as reitit]
             [reitit.frontend.controllers :as rfc]
-            [reitit.frontend.easy :as rfe]
-            [landing-page.shop.shop-item.view :as shop-item.view]))
+            [reitit.frontend.easy :as rfe]))
 
 (rf/reg-event-db
  ::appdb-add-route-name

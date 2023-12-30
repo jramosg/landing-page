@@ -126,14 +126,14 @@
          (if (seq available-colors)
            [stack {:direction "row"}
             (doall
-              (for [color available-colors]
-                [box {:key color
-                      :height 15 :width 15
-                      :border "2px solid"
-                      :border-radius "50%"
-                      :margin-left -0.6
-                      :border-color "text.primary"
-                      :bgcolor (get-in constants/indexed-colors [color :code])}]))])]
+             (for [color available-colors]
+               [box {:key color
+                     :height 15 :width 15
+                     :border "2px solid"
+                     :border-radius "50%"
+                     :margin-left -0.6
+                     :border-color "text.primary"
+                     :bgcolor (get-in constants/indexed-colors [color :code])}]))])]
         [card-actions
          [icon-button {:sx add-sx
                        :on-click to-item}
@@ -164,7 +164,7 @@
                   :variant "outlined"
                   :on-click #(reset! anchor-element (.-target %))}
           (if selected (i18n/t (util/listen [::subs/sort-by-label]))
-                       (i18n/t :sort-by))]
+              (i18n/t :sort-by))]
          [menu {:id "language-selector-menu"
                 :anchor-el @anchor-element
                 :open (boolean @anchor-element)
@@ -173,7 +173,7 @@
                 :transform-origin {:vertical "top" :horizontal "right"}}
           (doall
            (for [{:keys [sort-label] :as m} [#_{:sort-label :newest
-                                              :sorting-order "desc"}
+                                                :sorting-order "desc"}
                                              {:sort-label :price-high-low
                                               :sort-kw :price-with-discount
                                               :sorting-order "desc"}
@@ -225,9 +225,9 @@
     [show-filters-container
      (i18n/t :size)
      (doall
-       (for [size sizes]
-         [chip {:key size :label size
-                :on-delete #(util/>evt [::events/delete-size size])}]))]))
+      (for [size sizes]
+        [chip {:key size :label size
+               :on-delete #(util/>evt [::events/delete-size size])}]))]))
 
 (defn- show-filters []
   [stack {:direction "row" :spacing 2 :align-items "center" :flex-wrap "wrap" :use-flex-gap true}

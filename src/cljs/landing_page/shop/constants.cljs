@@ -1,6 +1,6 @@
 (ns landing-page.shop.constants
-  (:require [reagent-mui.colors :as colors]
-            [medley.core :as m]))
+  (:require [medley.core :as m]
+            [reagent-mui.colors :as colors]))
 
 (def ^:const shop-root-path [:shop])
 

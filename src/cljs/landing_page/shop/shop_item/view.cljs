@@ -1,8 +1,8 @@
 (ns landing-page.shop.shop-item.view
-  (:require [reagent-mui.material.stack :refer [stack]]
-            [reagent-mui.styles :as styles]
+  (:require [reagent-mui.material.container :refer [container]]
             [reagent-mui.material.grow :refer [grow]]
-            [reagent-mui.material.container :refer [container]]))
+            [reagent-mui.material.stack :refer [stack]]
+            [reagent-mui.styles :as styles]))
 
 (def ^:private styled-img (styles/styled "img" {:height "100%"
                                                 :max-height "400px"}))

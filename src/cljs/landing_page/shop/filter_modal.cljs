@@ -5,7 +5,6 @@
             [landing-page.shop.events :as events]
             [landing-page.shop.subs :as subs]
             [landing-page.util :as util]
-
             [reagent-mui.icons.check :refer [check]]
             [reagent-mui.material.box :refer [box]]
             [reagent-mui.material.button :refer [button]]
@@ -15,8 +14,7 @@
             [reagent-mui.material.stack :refer [stack]]
             [reagent-mui.material.typography :refer [typography]]
             [reagent-mui.styles :as styles]
-            [reagent.core :as r]
-            [landing-page.shop.constants :as constants]))
+            [reagent.core :as r]))
 
 (defn- title+content-wrapper [title content]
   [box {:px 2.5}

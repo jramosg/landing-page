@@ -9,7 +9,7 @@
       (vec (map-indexed (fn [id i]
                           (let [images [(format photo-url i) (format photo-url (inc i))]
                                 discount (rand-nth (into (repeat 5 0) [10 20 30 40]))
-                                price (rand-nth [50.99 60.99 99.99 105.99 40.99 180.00 ])]
+                                price (rand-nth [50.99 60.99 99.99 105.99 40.99 180.00])]
                             {:images images
                              :price price
                              :discount discount
@@ -118,9 +118,9 @@
     :available-sizes [36 38.0 36.5 43.5 44.0 44.5 40.0 41.0 39.0 42.0 38.5 37.5 45.0 42.5]}])
 
 (rf/reg-sub
-  ::shop-items
-  (fn [_]
-    shop-items-mocked))
+ ::shop-items
+ (fn [_]
+   shop-items-mocked))
 
 (rf/reg-sub
  ::filters
@@ -133,40 +133,40 @@
    (get-in db constants/sort-by-path)))
 
 (rf/reg-sub
-  ::sort-by-label
-  :<- [::sort-by]
-  (fn [sort-m] (:sort-label sort-m)))
+ ::sort-by-label
+ :<- [::sort-by]
+ (fn [sort-m] (:sort-label sort-m)))
 
 (defn- filter-items [items {:keys [colors sizes]}]
   (filter
-    (fn [{:keys [available-colors available-sizes]}]
-      (and
-        (or (empty? colors) (some colors available-colors))
-        (or (empty? sizes) (some sizes available-sizes))))
-    items))
+   (fn [{:keys [available-colors available-sizes]}]
+     (and
+      (or (empty? colors) (some colors available-colors))
+      (or (empty? sizes) (some sizes available-sizes))))
+   items))
 
 (defn- desc [a b] (compare b a))
 
 (defn- sort-items [items {:keys [sort-kw sorting-order] :as sort-m}]
   (prn "sort-m " sort-m)
   (sort-by
-    (fn [item]
-      (cond-> (sort-kw item)
-              (= sort-kw :price-with-discount)
-              js/parseFloat))
-    (if (= sorting-order "desc")
-      desc compare)
-    items))
+   (fn [item]
+     (cond-> (sort-kw item)
+       (= sort-kw :price-with-discount)
+       js/parseFloat))
+   (if (= sorting-order "desc")
+     desc compare)
+   items))
 
 (rf/reg-sub
-  ::filter+sorted-items
-  :<- [::shop-items]
-  :<- [::filters]
-  :<- [::sort-by]
-  (fn [[items filters sort-m]]
-    (cond-> items
-             (seq filters) (filter-items filters)
-            sort-m (sort-items sort-m))))
+ ::filter+sorted-items
+ :<- [::shop-items]
+ :<- [::filters]
+ :<- [::sort-by]
+ (fn [[items filters sort-m]]
+   (cond-> items
+     (seq filters) (filter-items filters)
+     sort-m (sort-items sort-m))))
 
 (rf/reg-sub
  ::filter-count
