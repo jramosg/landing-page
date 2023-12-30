@@ -5,18 +5,18 @@
             [landing-page.shop.events :as events]
             [landing-page.shop.subs :as subs]
             [landing-page.util :as util]
-            [reagent-mui.colors :as colors]
+
             [reagent-mui.icons.check :refer [check]]
             [reagent-mui.material.box :refer [box]]
             [reagent-mui.material.button :refer [button]]
-            [reagent-mui.material.chip :refer [chip]]
             [reagent-mui.material.dialog-actions :refer [dialog-actions]]
             [reagent-mui.material.dialog-content :refer [dialog-content]]
             [reagent-mui.material.divider :refer [divider]]
             [reagent-mui.material.stack :refer [stack]]
             [reagent-mui.material.typography :refer [typography]]
             [reagent-mui.styles :as styles]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            [landing-page.shop.constants :as constants]))
 
 (defn- title+content-wrapper [title content]
   [box {:px 2.5}
@@ -39,7 +39,7 @@
   (styles/styled
    button
    {:shouldForwardProp (fn [props] (not (contains? #{"bgcolor" "selected?"} props)))}
-   (fn [{:keys [theme bgcolor selected?]}]
+   (fn [{:keys [theme bgcolor]}]
      (cond->
       {:border-radius circle-size
        :height circle-size
@@ -49,9 +49,7 @@
        bgcolor (assoc :background-color bgcolor
                       :color ((get-in theme [:palette :get-contrast-text]) bgcolor)
                       ":hover" {:background-color bgcolor}
-                      :border-color (if selected?
-                                      (get-in theme [:palette :secondary :main])
-                                      (get-in theme [:palette :text :primary])))))))
+                      :border-color (get-in theme [:palette :text :primary]))))))
 
 (defn- update-filter-kw [state kw v]
   (swap! state update kw (fn [s]
@@ -63,11 +61,10 @@
    (i18n/t :color)
    [color-size-grid
     (doall
-     (for [color [colors/green colors/red colors/blue colors/yellow colors/grey {500 "#000"} {500 "#fff"} colors/orange]
-           :let [color (color 500)
-                 selected? ((:colors @state) color)]]
+     (for [{:keys [color code]} constants/colors
+           :let [selected? ((:colors @state) color)]]
        [styled-button {:key color
-                       :bgcolor color
+                       :bgcolor code
                        :selected? ((:colors @state) color)
                        :on-click #(update-filter-kw state :colors color)} ""
         (when selected? [check])]))]])

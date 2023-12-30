@@ -2,12 +2,11 @@
   (:require [landing-page.components.modals :as modals]
             [landing-page.components.text-field :refer [my-text-field]]
             [landing-page.context.i18n :as i18n]
+            [landing-page.shop.constants :as constants]
             [landing-page.shop.events :as events]
             [landing-page.shop.filter-modal :as filter-modal]
             [landing-page.shop.subs :as subs]
             [landing-page.util :as util]
-            [goog.string :as gs]
-            goog.string.format
             [reagent-mui.icons.add :refer [add]]
             [reagent-mui.icons.fiber-manual-record :refer [fiber-manual-record]]
             [reagent-mui.icons.fiber-manual-record-outlined :refer [fiber-manual-record-outlined]]
@@ -83,11 +82,25 @@
    :color "primary.contrastText"
    ":hover" {:background-color "primary.dark"}})
 
-(defn- image-card [[img0 :as _images]]
+(def ^:const ^:private discount-box-style
+  {:position "absolute"
+   :top 1
+   :left 1
+   :bgcolor "error.main"
+   :color "error.contrastText"
+   :border-radius "50%"
+   :height 40
+   :px 0.25
+   :width 40
+   :display "flex"
+   :align-items "center"
+   :justify-content "center"
+   :font-weight "bold"})
+
+(defn- image-card [{[img0] :images id :id}]
   (let [active-img-atm (r/atom img0)
-        id (str (random-uuid))
-        to-item #(rfe/push-state :route/shop-item nil {:item (str (random-uuid))})]
-    (fn [images]
+        to-item #(rfe/push-state :route/shop-item nil {:item id})]
+    (fn [{:keys [images price price-with-discount discount available-colors]}]
       [card {:sx {:p 2 :max-width "400px"}
              :elevation 10}
        (doall
@@ -98,11 +111,29 @@
             [card-action-area
              {:on-click to-item}
              [card-media {:component "img" :image image :alt "Shop item"}]]]
-           [image-toogle-btns images active-img-atm]]))
+           [image-toogle-btns images active-img-atm]
+           (when (pos? discount)
+             [box discount-box-style
+              (str discount " %")])]))
        [stack {:direction "row" :justify-content "space-between"}
         [card-content
-         [typography {:variant "h6"} "lorem"]
-         [:div "X €"]]
+         [typography {:variant "h6"} (str "It" id)]
+         (if (zero? discount)
+           [:div price]
+           [:<>
+            [:del (str price " €")]
+            [box {:color "error.main" :component "span"} (str " " price-with-discount " €")]])
+         (if (seq available-colors)
+           [stack {:direction "row"}
+            (doall
+              (for [color available-colors]
+                [box {:key color
+                      :height 15 :width 15
+                      :border "2px solid"
+                      :border-radius "50%"
+                      :margin-left -0.6
+                      :border-color "text.primary"
+                      :bgcolor (get-in constants/indexed-colors [color :code])}]))])]
         [card-actions
          [icon-button {:sx add-sx
                        :on-click to-item}
@@ -132,7 +163,7 @@
          [button {:start-icon (r/as-element [import-export])
                   :variant "outlined"
                   :on-click #(reset! anchor-element (.-target %))}
-          (if selected (i18n/t selected)
+          (if selected (i18n/t (util/listen [::subs/sort-by-label]))
                        (i18n/t :sort-by))]
          [menu {:id "language-selector-menu"
                 :anchor-el @anchor-element
@@ -141,13 +172,24 @@
                 :anchor-origin {:vertical "bottom" :horizontal "right"}
                 :transform-origin {:vertical "top" :horizontal "right"}}
           (doall
-           (for [kw [:newest :price-high-low :price-low-high :discount]]
+           (for [{:keys [sort-label] :as m} [#_{:sort-label :newest
+                                              :sorting-order "desc"}
+                                             {:sort-label :price-high-low
+                                              :sort-kw :price-with-discount
+                                              :sorting-order "desc"}
+                                             {:sort-label :price-low-high
+                                              :sort-kw :price-with-discount
+                                              :sorting-order "asc"}
+                                             {:sort-label :discount
+                                              :sort-kw :discount
+                                              :sorting-order "desc"}]]
              [menu-item {:on-click (fn []
-                                     (util/>evt [::events/add-sort-by kw])
+                                     (util/>evt [::events/add-sort-by (when-not (= selected m)
+                                                                        m)])
                                      (close!))
-                         :selected (= selected kw)
-                         :key kw}
-              (i18n/t kw)]))]]))))
+                         :selected (= selected m)
+                         :key sort-label}
+              (i18n/t sort-label)]))]]))))
 
 (defn- shop-header []
   [stack {:direction "row" :justify-content "space-between" :spacing 1 :align-items "center"}
@@ -171,10 +213,11 @@
      (i18n/t :color)
      (doall
       (for [color colors]
-        [chip {:key color :label (r/as-element [box {:width "20px"
-                                                     :height "20px"
-                                                     :border-radius "20px"
-                                                     :bgcolor color}])
+        [chip {:key color
+               :label (r/as-element [box {:width "20px"
+                                          :height "20px"
+                                          :border-radius "20px"
+                                          :bgcolor (get-in constants/indexed-colors [color :code])}])
                :on-delete #(util/>evt [::events/delete-color color])}]))]))
 
 (defn- size-filters []
@@ -182,9 +225,9 @@
     [show-filters-container
      (i18n/t :size)
      (doall
-      (for [size sizes]
-        [chip {:key size :label size
-               :on-delete #(util/>evt [::events/delete-size size])}]))]))
+       (for [size sizes]
+         [chip {:key size :label size
+                :on-delete #(util/>evt [::events/delete-size size])}]))]))
 
 (defn- show-filters []
   [stack {:direction "row" :spacing 2 :align-items "center" :flex-wrap "wrap" :use-flex-gap true}
@@ -203,7 +246,5 @@
                :grid-gap (fn [theme] ((:spacing (mui.util/js->clj' theme)) 2))
                :justify-content "center"}}
      (doall
-      (for [i (range 1 25 2)
-            :let [images [(gs/format photo-url i) (gs/format photo-url (inc i))]]]
-        ^{:key i}
-        [image-card images]))]]])
+      (for [{:keys [id] :as item} (util/listen [::subs/filter+sorted-items])]
+        ^{:key id} [image-card item]))]]])
