@@ -28,6 +28,7 @@
             [reagent-mui.material.menu :refer [menu]]
             [reagent-mui.material.menu-item :refer [menu-item]]
             [reagent-mui.material.paper :refer [paper]]
+            [reagent-mui.material.skeleton :refer [skeleton]]
             [reagent-mui.material.stack :refer [stack]]
             [reagent-mui.material.toggle-button :refer [toggle-button]]
             [reagent-mui.material.toggle-button-group :refer [toggle-button-group]]
@@ -36,13 +37,6 @@
             [reagent-mui.util :as mui.util]
             [reagent.core :as r]
             [reitit.frontend.easy :as rfe]))
-
-(def ^:private photo-url "https://api-prod-minimal-v510.vercel.app/assets/images/m_product/product_%s.jpg")
-
-(def ^:private styled-img
-  (styles/styled
-   "img"
-   {:width "100%"}))
 
 (def ^:private img-box
   (styles/styled
@@ -101,43 +95,55 @@
   (let [active-img-atm (r/atom img0)
         to-item #(rfe/push-state :route/shop-item nil {:item id})]
     (fn [{:keys [images price price-with-discount discount available-colors]}]
-      [card {:sx {:p 2 :max-width "400px"}
-             :elevation 10}
-       (doall
-        (for [image images]
-          [img-box {:key image
-                    :display (if (= image @active-img-atm) "block" "none")}
-           [grow {:in (= image @active-img-atm) :timeout 1000}
-            [card-action-area
-             {:on-click to-item}
-             [card-media {:component "img" :image image :alt "Shop item"}]]]
-           [image-toogle-btns images active-img-atm]
-           (when (pos? discount)
-             [box discount-box-style
-              (str discount " %")])]))
-       [stack {:direction "row" :justify-content "space-between"}
-        [card-content
-         [typography {:variant "h6"} (str "It" id)]
-         (if (zero? discount)
-           [:div price]
-           [:<>
-            [:del (str price " €")]
-            [box {:color "error.main" :component "span"} (str " " price-with-discount " €")]])
-         (if (seq available-colors)
-           [stack {:direction "row"}
-            (doall
-             (for [color available-colors]
-               [box {:key color
-                     :height 15 :width 15
-                     :border "2px solid"
-                     :border-radius "50%"
-                     :margin-left -0.6
-                     :border-color "text.primary"
-                     :bgcolor (get-in constants/indexed-colors [color :code])}]))])]
-        [card-actions
-         [icon-button {:sx add-sx
-                       :on-click to-item}
-          [add]]]]])))
+      (let [loading? (util/listen [::subs/loading?])]
+
+        [card {:sx {:p 2 :max-width "400px"}
+               :elevation 10}
+         (if loading?
+           [skeleton {:sx {:height 300} :animation "wave"}]
+           (doall
+            (for [image images]
+              [img-box {:key image
+                        :display (if (= image @active-img-atm) "block" "none")}
+               [grow {:in (= image @active-img-atm) :timeout 1000 :appear false}
+                [card-action-area
+                 {:on-click to-item}
+                 [card-media {:component "img" :image image :alt "Shop item"}]]]
+               [image-toogle-btns images active-img-atm]
+               (when (pos? discount)
+                 [box discount-box-style
+                  (str discount " %")])])))
+         [stack {:direction "row" :justify-content "space-between"}
+          [card-content
+           (if loading?
+             [skeleton {:width 100}]
+             [typography {:variant "h6"} (str "It" id)])
+           (cond
+             loading? [skeleton {:width 100}]
+             (zero? discount) [:div price]
+             :else
+             [:<>
+              [:del (str price " €")]
+              [box {:color "error.main" :component "span"} (str " " price-with-discount " €")]])
+           (cond
+             loading? [skeleton {:width 50}]
+             (seq available-colors)
+             [stack {:direction "row"}
+              (doall
+               (for [color available-colors]
+                 [box {:key color
+                       :height 15 :width 15
+                       :border "2px solid"
+                       :border-radius "50%"
+                       :margin-left -0.6
+                       :border-color "text.primary"
+                       :bgcolor (get-in constants/indexed-colors [color :code])}]))])]
+          (if loading?
+            [card-actions [skeleton {:variant "circular" :width 50 :height 50}]]
+            [card-actions
+             [icon-button {:sx add-sx
+                           :on-click to-item}
+              [add]]])]]))))
 
 (defn- search-bar []
   [my-text-field {:InputProps {:start-adornment (r/as-element [search-icon {:color "primary"}])}
@@ -247,4 +253,4 @@
                :justify-content "center"}}
      (doall
       (for [{:keys [id] :as item} (util/listen [::subs/filter+sorted-items])]
-        ^{:key id} [image-card item]))]]])
+        ^{:key (or id (random-uuid))} [image-card item]))]]])
